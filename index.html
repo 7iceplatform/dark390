@@ -1,535 +1,350 @@
 
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0f14">
-<title>DARK #390 — Last Asylum</title>
+<meta name="theme-color" content="#090c12">
+<title>DARK — IMPERIUM | Server 390</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{
-  color-scheme:dark;
-  --bg:#0b0f14;--panel:#0e1a24;--card:#111820;
-  --border:#1d2a36;--text:#e6eef6;--muted:#93a3b8;
-  --blue:#38bdf8;--red:#fb7185;--green:#34d399;
-}
+:root{color-scheme:dark;--bg:#090c12;--panel:#10151f;--card:#141b27;--line:#263143;--text:#edf3ff;--muted:#8795ab;--blue:#62a8ff;--cyan:#54e1e6;--green:#4adea3;--red:#fb7185}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{margin:0;background:radial-gradient(ellipse at 50% -15%,#18345a 0,transparent 48%),var(--bg);color:var(--text);font:14px/1.45 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input{font:inherit}
-button{touch-action:manipulation}
-.wrap{max-width:900px;margin:auto;padding:14px;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
-.hero{background:linear-gradient(135deg,#102538,#0e1a24 65%);
-border:1px solid var(--border);border-radius:16px;padding:16px}
-.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-h1{font-size:21px;line-height:1.25;margin:0 0 7px}
-h2{font-size:17px;margin:0 0 12px}
-h3{font-size:16px;margin:0}
-.muted{color:var(--muted)}
-.small{font-size:12px}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:15px}
-.pill{min-width:0;background:#111820;border:1px solid var(--border);border-radius:11px;padding:10px}
-.pill span{display:block;color:var(--muted);font-size:12px}
-.pill b{display:block;margin-top:3px;font-size:19px;overflow-wrap:anywhere}
-.btn{background:#123055;color:#fff;border:1px solid #204b70;border-radius:10px;padding:9px 12px;cursor:pointer}
-.btn:disabled{opacity:.5;cursor:wait}
-.btn.secondary{background:#111820;border-color:var(--border)}
-.search{display:flex;gap:7px;margin:12px 0}
-input{min-width:0;width:100%;background:#0d1722;color:#fff;border:1px solid var(--border);border-radius:10px;padding:11px;outline:none}
-input:focus{border-color:#38bdf8}
-.tabs{display:flex;gap:6px;margin:12px 0;overflow-x:auto;padding-bottom:3px}
-.tab{padding:8px 12px;border-radius:999px;background:#111820;border:1px solid var(--border);color:var(--muted);cursor:pointer;white-space:nowrap}
-.tab.active{background:#0f2a40;color:#fff;border-color:#245276}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;min-width:0}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid #1a2631;min-width:0}
-.row:last-child{border-bottom:0}
-.row-main{min-width:0;overflow-wrap:anywhere}
-.row-side{text-align:right;flex-shrink:0;overflow-wrap:anywhere;max-width:45%}
-.player-link{cursor:pointer}
-.player-link:hover{background:#15222e}
-.badge{display:inline-block;font-size:11px;padding:2px 7px;border-radius:999px;background:#0e2233;border:1px solid #1e3a52;color:#9ecbff}
-.error{color:var(--red);overflow-wrap:anywhere}
-.success{color:var(--green)}
-.footer{margin-top:10px;font-size:11px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.empty{text-align:center;padding:24px 10px;color:var(--muted)}
-.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
+button{cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.app{max-width:1050px;margin:auto;padding:20px 20px 40px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:43px;height:43px;border:1px solid #39639a;border-radius:14px;background:linear-gradient(145deg,#1e477c,#101d33);display:grid;place-items:center;font-weight:900;font-size:17px;letter-spacing:-1px;box-shadow:0 0 25px #2766aa20}
+.brand-name{font-size:16px;font-weight:850;letter-spacing:2px}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:2px}
+.server{border:1px solid var(--line);background:#101723;border-radius:9px;padding:8px 11px;color:#b8c8df;font-size:12px;white-space:nowrap}
+.hero{position:relative;overflow:hidden;border:1px solid #2b4567;border-radius:22px;padding:25px;background:linear-gradient(115deg,#152b46,#111b2b 55%,#111725);box-shadow:0 16px 55px #0002}
+.hero:after{content:"390";position:absolute;right:14px;bottom:-43px;font-size:170px;font-weight:950;letter-spacing:-12px;color:#ffffff05;pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;position:relative;z-index:1}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:2.4px;color:var(--cyan)}
+h1{font-size:clamp(27px,5vw,43px);letter-spacing:-1.7px;line-height:1.08;margin:10px 0 9px;font-weight:900}
+.hero p{color:#a9bbd3;margin:0;max-width:470px;line-height:1.6}
+.live{display:flex;align-items:center;gap:7px;color:#a7e8ca;font-size:11px;white-space:nowrap;border:1px solid #2d6a55;background:#10382c80;padding:7px 10px;border-radius:99px}
+.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px #4adea3}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:25px;position:relative;z-index:1}
+.stat{padding:14px;background:#0b1220a8;border:1px solid #31435b;border-radius:13px;min-width:0}
+.stat-label{font-size:11px;color:#9baec6;display:flex;align-items:center;gap:7px}
+.stat-icon{color:var(--blue);font-size:15px}
+.stat-value{font-size:clamp(22px,3vw,30px);font-weight:850;letter-spacing:-1px;margin-top:8px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.stat-foot{font-size:10px;color:#72839a;margin-top:3px}
+.toolbar{display:flex;gap:10px;margin:22px 0 14px}
+.searchbox{flex:1;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:0 14px;min-width:0}
+.search-icon{font-size:18px;color:var(--muted)}
+.searchbox input{background:transparent;border:0;outline:none;color:var(--text);width:100%;min-width:0;padding:13px 0}
+.searchbox input::placeholder{color:#69788e}
+.btn{border:1px solid #315b8b;border-radius:12px;padding:11px 15px;background:linear-gradient(135deg,#23528b,#17365f);color:#fff;font-weight:700;white-space:nowrap}
+.btn:hover{filter:brightness(1.14)}
+.btn:disabled{opacity:.6}
+.btn-quiet{background:#131b28;border-color:var(--line);color:#c8d5e8}
+.tabs{display:flex;gap:7px;padding:5px;background:#0e131d;border:1px solid #1c2635;border-radius:14px;margin-bottom:16px;overflow-x:auto}
+.tab{flex:1;min-width:max-content;border:0;border-radius:10px;padding:11px 13px;background:transparent;color:#8290a5;font-size:12px;font-weight:750}
+.tab.active{background:linear-gradient(135deg,#203d60,#172a43);color:#eff6ff;box-shadow:inset 0 0 0 1px #34577f}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:23px 0 13px}
+.section-title{font-size:18px;font-weight:850;letter-spacing:-.4px}
+.section-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.count{color:#b8d8ff;border:1px solid #29476b;background:#14253a;padding:5px 9px;border-radius:8px;font-size:11px;font-weight:800}
+.list{display:grid;gap:8px}
+.player{display:flex;align-items:center;gap:13px;background:linear-gradient(110deg,#141b27,#111722);border:1px solid #202c3c;border-radius:15px;padding:13px;transition:border-color .15s,transform .15s;min-width:0}
+.player[data-player]{cursor:pointer}
+.player[data-player]:hover{border-color:#3b5b83;transform:translateY(-1px)}
+.position{width:30px;flex-shrink:0;color:#697b95;font-size:12px;font-weight:800;text-align:center}
+.avatar{width:43px;height:43px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#213d61,#152337);border:1px solid #304a6a;color:#b8d9ff;font-weight:900;font-size:14px}
+.player-info{flex:1;min-width:0}
+.player-name{font-size:14px;font-weight:800;overflow-wrap:anywhere}
+.player-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px;font-size:11px;color:var(--muted)}
+.tag{padding:3px 7px;border-radius:6px;background:#1a2636;border:1px solid #2a394e;color:#b4c6df;font-size:10px;font-weight:750}
+.power{text-align:right;min-width:80px}
+.power strong{font-size:14px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.power span{display:block;color:#78889f;font-size:10px;margin-top:3px}
+.rank-medal{font-size:20px;width:30px;text-align:center;flex-shrink:0}
+.alliance-mark{height:38px;width:43px;display:grid;place-items:center;border-radius:10px;background:#172438;border:1px solid #2a405c;font-size:11px;font-weight:900;color:#b9d7ff;flex-shrink:0}
+.transfer{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px;font-size:11px;color:#9baec5}
+.from{color:#f7a5b4}.to{color:#83e8bf}.arrow{color:#687f9d}
+.date{font-size:11px;color:#8493a8;text-align:right;white-space:nowrap}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
+.empty{text-align:center;padding:38px 15px;color:var(--muted)}
+.empty-icon{font-size:28px;margin-bottom:10px}
+.error{border:1px solid #653243;background:#281620;border-radius:12px;padding:14px;color:#ffb6c4;overflow-wrap:anywhere}
+.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:17px;color:#627187;font-size:10px}
+.modal{position:fixed;inset:0;z-index:10;background:#03060bd9;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:14px}
 .modal.open{display:flex}
-.sheet{width:100%;max-width:780px;max-height:88vh;overflow:auto;background:#0e1620;border:1px solid var(--border);border-radius:16px;padding:15px}
-.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.sheet-title{min-width:0;overflow-wrap:anywhere}
-.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
-.profile-stat{background:#111820;border:1px solid var(--border);border-radius:10px;padding:11px;overflow-wrap:anywhere}
-.profile-stat b{display:block;margin-top:4px;font-size:16px}
-.section{margin-top:16px}
-.section-title{font-weight:700;margin-bottom:5px}
-@media(max-width:520px){
- .wrap{padding:10px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
- .hero{padding:13px}
- h1{font-size:19px}
- .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
- .pill b{font-size:18px}
- .row{gap:7px}
- .row-side{max-width:42%;font-size:12px}
- .search .btn{padding:9px}
- .tab{padding:8px 10px}
+.sheet{width:100%;max-width:680px;max-height:90vh;overflow:auto;background:#0e141e;border:1px solid #2a3b51;border-radius:21px;padding:21px;box-shadow:0 25px 90px #0009}
+.profile-head{display:flex;align-items:flex-start;gap:12px}
+.profile-head .avatar{width:55px;height:55px;font-size:18px}
+.profile-name{font-size:21px;font-weight:900;overflow-wrap:anywhere}
+.profile-id{font-size:11px;color:var(--muted);margin-top:5px}
+.profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:20px 0}
+.profile-stat{border:1px solid var(--line);background:#131b27;border-radius:13px;padding:13px;min-width:0}
+.profile-stat span{display:block;font-size:11px;color:var(--muted)}
+.profile-stat strong{display:block;font-size:20px;margin-top:6px;overflow-wrap:anywhere}
+.history-title{font-weight:800;font-size:13px;margin:19px 0 8px}
+.history-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #202b3a}
+.history-row:last-child{border-bottom:0}
+.history-value{overflow-wrap:anywhere}
+.history-time{font-size:11px;color:var(--muted);text-align:right;flex-shrink:0}
+.close{margin-left:auto}
+@media(max-width:600px){
+ .app{padding:13px 12px 30px}
+ .topbar{margin-bottom:15px}
+ .hero{padding:19px 15px;border-radius:18px}
+ .hero:after{font-size:115px;bottom:-20px;right:4px}
+ h1{letter-spacing:-1px}
+ .hero p{font-size:12px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:19px}
+ .stat{padding:11px}
+ .stat-value{font-size:25px}
+ .toolbar{gap:7px}
+ .btn{padding:10px 11px}
+ .tabs{margin-bottom:13px}
+ .tab{padding:10px 12px}
+ .player{gap:9px;padding:11px 9px;border-radius:13px}
+ .position{width:20px;font-size:11px}
+ .avatar{width:37px;height:37px;border-radius:11px}
+ .player-name{font-size:13px}
+ .power{min-width:65px}
+ .power strong{font-size:12px}
+ .alliance-mark{width:36px;height:36px}
+ .date{font-size:10px;white-space:normal}
+ .sheet{padding:16px;border-radius:18px}
 }
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="hero">
-    <div class="head">
-      <div>
-        <h1>DARK #390 — Last Asylum</h1>
-        <div class="muted small">
-          Server #390 · <span id="now">Connecting…</span>
-        </div>
-      </div>
-      <button class="btn" id="refresh">Refresh ↻</button>
-    </div>
-    <div class="stats">
-      <div class="pill"><span>Players tracked</span><b id="total">—</b></div>
-      <div class="pill"><span>DARK members</span><b id="dark">—</b></div>
-      <div class="pill"><span>Top alliances</span><b id="topcount">—</b></div>
-      <div class="pill"><span>HTML Auto</span><b id="auto">—</b></div>
-    </div>
-  </header>
+<div class="app">
+<header class="topbar">
+ <div class="brand">
+  <div class="logo">D.</div>
+  <div><div class="brand-name">IMPERIUM</div><div class="brand-sub">ALLIANCE INTELLIGENCE</div></div>
+ </div>
+ <div class="server">◈ &nbsp; SERVER #390</div>
+</header>
 
-  <div class="search">
-    <input id="q" type="search" placeholder="Nickname, old nickname or player ID" autocomplete="off">
-    <button class="btn" id="searchBtn">Search</button>
+<section class="hero">
+ <div class="hero-top">
+  <div>
+   <div class="eyebrow">DARK / COMMAND CENTER</div>
+   <h1>Know your server.<br>Control the game.</h1>
+   <p>Аналитика альянса, история игроков и контроль перемещений на сервере.</p>
   </div>
-  <div id="searchRes" class="card" hidden></div>
+  <div class="live"><span class="dot"></span><span id="status">CONNECTING</span></div>
+ </div>
+ <div class="stats">
+  <div class="stat"><div class="stat-label"><span class="stat-icon">◉</span> Игроки в базе</div><div class="stat-value" id="total">—</div><div class="stat-foot">Отслеживаемые ID</div></div>
+  <div class="stat"><div class="stat-label"><span class="stat-icon">◆</span> DARK</div><div class="stat-value" id="dark">—</div><div class="stat-foot">Состав альянса</div></div>
+  <div class="stat"><div class="stat-label"><span class="stat-icon">↗</span> Альянсы</div><div class="stat-value" id="topcount">—</div><div class="stat-foot">В рейтинге</div></div>
+  <div class="stat"><div class="stat-label"><span class="stat-icon">⌁</span> HTML sync</div><div class="stat-value" id="auto">—</div><div class="stat-foot">Автосинхронизация</div></div>
+ </div>
+</section>
 
-  <nav class="tabs" aria-label="Sections">
-    <button class="tab active" data-tab="roster">Roster DARK</button>
-    <button class="tab" data-tab="top">Top #390</button>
-    <button class="tab" data-tab="transfers">Transfers</button>
-    <button class="tab" data-tab="new">New players</button>
-  </nav>
+<div class="toolbar">
+ <label class="searchbox"><span class="search-icon">⌕</span><input id="q" type="search" placeholder="Ник, старый ник или ID…" autocomplete="off"></label>
+ <button class="btn" id="searchBtn">Найти</button>
+ <button class="btn btn-quiet" id="refresh" title="Обновить данные">↻</button>
+</div>
+<div id="searchRes" class="card" hidden style="margin-bottom:15px"></div>
 
-  <main id="content" class="card" aria-live="polite">
-    <div class="empty">Loading data…</div>
-  </main>
+<nav class="tabs">
+ <button class="tab active" data-tab="roster">◈ Состав DARK</button>
+ <button class="tab" data-tab="top">♛ Рейтинг</button>
+ <button class="tab" data-tab="transfers">⇄ Переходы</button>
+ <button class="tab" data-tab="new">✦ Новички</button>
+</nav>
 
-  <footer class="footer muted">
-    <span id="src">Source: —</span>
-    <span id="last">Last update: —</span>
-  </footer>
+<main id="content"><div class="card empty">Загружаем данные сервера…</div></main>
+
+<footer class="footer"><span id="src">Источник: —</span><span id="last">Обновление: —</span></footer>
 </div>
 
-<div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Player details">
-  <div class="sheet" id="sheet"></div>
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Профиль игрока">
+ <div class="sheet" id="sheet"></div>
 </div>
 
 <script>
 'use strict';
 
-/* TBC Mini App endpoints */
-const API = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN80tl_7pwh6PhlXOGsO6fJ82jA4vgoGJco-AfNJfk1XZEY57hhZpLaO5P-3QGoGwuUPcWmqZ9TIsz_eWBNoKRPG2QNrZp4tUzsxykjxufs6I01CsXM4728aYGD50ldJDuaQ44seiDtLgnp1E3_HHL_2wXYxme7SvdYNO2eWRL2yyXDRDVkReGCPdK78KnATjI6';
+const API='https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN80tl_7pwh6PhlXOGsO6fJ82jA4vgoGJco-AfNJfk1XZEY57hhZpLaO5P-3QGoGwuUPcWmqZ9TIsz_eWBNoKRPG2QNrZp4tUzsxykjxufs6I01CsXM4728aYGD50ldJDuaQ44seiDtLgnp1E3_HHL_2wXYxme7SvdYNO2eWRL2yyXDRDVkReGCPdK78KnATjI6';
+const SAPI='https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN8b1BNTKFw2OuefuWVwEe3DP7RJq_9FLN0VP5Egu7iZlyQzDrtPhRBKxety4eG93eHZWOYpX41Tfc_FtfFrUZoUQQoOxnEilzVBSMkG0BNXzWfZ6bE3aH3pnedNUXLEnX6cjI-aRvybwa3HEjbDBFFnS2Qg-HkNaVl7HzPOmW3g16UFv1bOuXcBfVM61w8k7z-';
 
-const SAPI = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN8b1BNTKFw2OuefuWVwEe3DP7RJq_9FLN0VP5Egu7iZlyQzDrtPhRBKxety4eG93eHZWOYpX41Tfc_FtfFrUZoUQQoOxnEilzVBSMkG0BNXzWfZ6bE3aH3pnedNUXLEnX6cjI-aRvybwa3HEjbDBFFnS2Qg-HkNaVl7HzPOmW3g16UFv1bOuXcBfVM61w8k7z-';
+const $=id=>document.getElementById(id);
+let DATA=null,activeTab='roster',loading=false,searchLoading=false,loadAgain=false,loadController=null;
 
-let DATA = null;
-let activeTab = 'roster';
-let loading = false;
-let searchLoading = false;
-let requestController = null;
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function val(v){return v===null||v===undefined||v===''?'—':esc(v);}
+function number(v){if(v===null||v===undefined||v==='')return '—';let n=Number(v);return Number.isFinite(n)?n.toLocaleString('ru-RU'):esc(v);}
+function initials(n){let s=String(n||'?').trim();return esc((s.slice(0,2)||'?').toUpperCase());}
+function unwrap(j){let d=j;for(let i=0;i<3&&d&&d.result!==undefined;i++)d=d.result;if(!d||typeof d!=='object')throw Error('Некорректный ответ API');if(d.error)throw Error(String(d.error));return d;}
 
-const $ = id => document.getElementById(id);
-
-function esc(value) {
-  return String(value ?? '').replace(/[&<>"']/g, ch => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  })[ch]);
+async function request(url,options={}){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+ try{
+  const r=await fetch(url,{...options,signal:controller.signal,headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{}),...options.headers}});
+  const raw=await r.text();let j;
+  try{j=JSON.parse(raw);}catch{throw Error('API вернул не JSON (HTTP '+r.status+'): '+raw.slice(0,120));}
+  if(!r.ok)throw Error('HTTP '+r.status+': '+(j.message||j.error||'Ошибка запроса'));
+  return unwrap(j);
+ }catch(e){
+  if(e.name==='AbortError')throw Error('Превышено время ожидания API');
+  if(e instanceof TypeError)throw Error('Ошибка сети/CORS. Проверь настройки TBC API.');
+  throw e;
+ }finally{clearTimeout(timer);}
 }
 
-function num(value) {
-  if (value === null || value === undefined || value === '') return '—';
-  const n = Number(value);
-  return Number.isFinite(n) ? n.toLocaleString('en-US') : esc(value);
+function sectionHead(title,sub,count){
+ return '<div class="section-head"><div><div class="section-title">'+title+'</div><div class="section-sub">'+sub+'</div></div><span class="count">'+count+'</span></div>';
+}
+function empty(msg){return '<div class="card empty"><div class="empty-icon">◇</div>'+esc(msg)+'</div>';}
+function playerRow(p,i,mode='roster'){
+ const id=p.id??p.pid;
+ const nick=p.nick||p.nickname||'Unknown';
+ const power=p.power;
+ let meta='',side='',lead='';
+ if(mode==='roster'){
+  lead='<div class="position">'+String(i+1).padStart(2,'0')+'</div>';
+  meta='<span class="tag">R'+val(p.rank)+'</span><span>ID '+val(id)+'</span>';
+  side='<div class="power"><strong>'+number(power)+'</strong><span>POWER</span></div>';
+ }else if(mode==='search'){
+  meta='<span class="tag">'+val(p.alliance)+'</span><span>ID '+val(id)+'</span>';
+  side='<div class="power"><strong>'+number(power)+'</strong><span>POWER</span></div>';
+ }else if(mode==='new'){
+  meta='<span class="tag">'+val(p.alliance)+'</span><span>Новый игрок</span>';
+  side='<div class="date">'+val(p.fmt)+'</div>';
+ }else if(mode==='transfer'){
+  meta='<span class="tag">Переход</span><span>ID '+val(id)+'</span>';
+  side='<div class="date">'+val(p.fmt)+'<div class="transfer"><span class="from">'+val(p.from)+'</span><span class="arrow">→</span><span class="to">'+val(p.to)+'</span></div></div>';
+ }
+ return '<article class="player" data-player="'+esc(id)+'">'+lead+
+  '<div class="avatar">'+initials(nick)+'</div><div class="player-info"><div class="player-name">'+esc(nick)+'</div><div class="player-meta">'+meta+'</div></div>'+side+'</article>';
 }
 
-function showTime(value) {
-  if (!value) return '—';
-  return esc(value);
+function renderTab(tab){
+ activeTab=tab;
+ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ if(!DATA){$('content').innerHTML=empty('Нет загруженных данных');return;}
+ let html='';
+ if(tab==='roster'){
+  const a=DATA.dark||[];
+  html=sectionHead('Состав DARK','Игроки альянса · нажми на игрока для подробностей',a.length);
+  html+='<div class="list">'+(a.length?a.map((p,i)=>playerRow(p,i)).join(''):empty('Список участников пуст'))+'</div>';
+ }
+ if(tab==='top'){
+  const a=DATA.top||[];
+  html=sectionHead('Рейтинг сервера','Альянсы · текущие данные базы',a.length);
+  html+='<div class="list">'+a.map((p,i)=>{
+   const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1).padStart(2,'0');
+   return '<article class="player"><div class="rank-medal">'+medal+'</div><div class="alliance-mark">'+esc(p.tag||'—')+'</div><div class="player-info"><div class="player-name">'+esc(p.name||p.tag||'Unknown')+'</div><div class="player-meta"><span>ID '+val(p.id)+'</span></div></div><div class="power"><strong>'+number(p.members)+'</strong><span>MEMBERS</span></div></article>';
+  }).join('')+'</div>';
+  if(!a.length)html+=empty('Рейтинг пока недоступен');
+ }
+ if(tab==='transfers'){
+  const a=DATA.transfers||[];
+  html=sectionHead('История переходов','Смена альянсов за последние 7 дней',a.length);
+  html+='<div class="list">'+(a.length?a.map((p,i)=>playerRow(p,i,'transfer')).join(''):empty('За последние 7 дней переходов нет'))+'</div>';
+ }
+ if(tab==='new'){
+  const a=DATA.new_players||[];
+  html=sectionHead('Новые игроки','Обнаружены за последние 7 дней',a.length);
+  html+='<div class="list">'+(a.length?a.map((p,i)=>playerRow(p,i,'new')).join(''):empty('Новых игроков нет'))+'</div>';
+ }
+ $('content').innerHTML=html;
 }
 
-function unwrap(json) {
-  let data = json;
-  for (let i = 0; i < 3 && data && data.result !== undefined; i++) {
-    data = data.result;
-  }
-  if (!data || typeof data !== 'object') {
-    throw new Error('Unexpected API response');
-  }
-  if (data.error) throw new Error(String(data.error));
-  return data;
+async function load(){
+ if(loading){loadAgain=true;return;}
+ loading=true;$('refresh').disabled=true;$('status').textContent='SYNCING';
+ if(loadController)loadController.abort();
+ loadController=new AbortController();
+ try{
+  const d=await request(API,{signal:loadController.signal});
+  if(!Array.isArray(d.dark))throw Error('В ответе API отсутствует массив dark');
+  DATA=d;
+  $('total').textContent=number(d.total_players);
+  $('dark').textContent=number(d.dark_active??d.dark.length);
+  $('topcount').textContent=number(d.top?.length??0);
+  $('auto').textContent=d.html_auto===true?'ON':'OFF';
+  $('auto').style.color=d.html_auto===true?'var(--green)':'var(--muted)';
+  $('status').textContent='CONNECTED';
+  $('src').textContent='Источник: '+(d.last_success?.source||'HTML parser');
+  $('last').textContent='Обновлено: '+(d.last_success?.tag||new Date().toLocaleTimeString('ru-RU'));
+  renderTab(activeTab);
+ }catch(e){
+  if(e.name==='AbortError')return;
+  $('status').textContent='ERROR';
+  $('content').innerHTML='<div class="error"><b>Не удалось загрузить данные</b><p>'+esc(e.message||e)+'</p><button class="btn" id="retry">Повторить</button></div>';
+ }finally{
+  loading=false;$('refresh').disabled=false;
+  if(loadAgain){loadAgain=false;load();}
+ }
 }
 
-async function request(url, options = {}) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 20000);
-
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        Accept: 'application/json',
-        ...(options.body ? {'Content-Type':'application/json'} : {}),
-        ...options.headers
-      }
-    });
-
-    const raw = await response.text();
-    let json;
-
-    try {
-      json = JSON.parse(raw);
-    } catch {
-      throw new Error(
-        'API returned invalid JSON (HTTP ' + response.status + '): ' +
-        raw.slice(0, 100)
-      );
-    }
-
-    if (!response.ok) {
-      throw new Error('HTTP ' + response.status + ': ' +
-        (json.message || json.error || 'Request failed'));
-    }
-
-    return unwrap(json);
-  } catch (error) {
-    if (error.name === 'AbortError') {
-      throw new Error('Request timed out after 20 seconds');
-    }
-    if (error instanceof TypeError) {
-      throw new Error('Network/CORS error. Check the TBC API settings.');
-    }
-    throw error;
-  } finally {
-    clearTimeout(timer);
-  }
+async function doSearch(){
+ const q=$('q').value.trim();
+ $('searchRes').hidden=false;
+ if(q.length<2){$('searchRes').innerHTML=empty('Введите минимум 2 символа');return;}
+ if(searchLoading)return;
+ searchLoading=true;$('searchBtn').disabled=true;$('searchBtn').textContent='…';
+ $('searchRes').innerHTML=empty('Ищем игрока…');
+ try{
+  const d=await request(SAPI,{method:'POST',body:JSON.stringify({q})});
+  const a=d.found||[];
+  if(!Array.isArray(a)||!a.length){$('searchRes').innerHTML=empty('Игрок не найден');return;}
+  $('searchRes').innerHTML=sectionHead('Результаты поиска','Совпадения в базе',a.length)+'<div class="list">'+a.map((p,i)=>playerRow(p,i,'search')).join('')+'</div>';
+ }catch(e){$('searchRes').innerHTML='<div class="error"><b>Ошибка поиска</b><p>'+esc(e.message||e)+'</p></div>';}
+ finally{searchLoading=false;$('searchBtn').disabled=false;$('searchBtn').textContent='Найти';}
 }
 
-function getErrorMessage(error) {
-  return error && error.message ? error.message : String(error);
+function history(title,items,formatter){
+ let h='<div class="history-title">'+title+'</div>';
+ if(!Array.isArray(items)||!items.length)return h+'<div class="section-sub">История отсутствует</div>';
+ return h+items.map(x=>'<div class="history-row"><div class="history-value">'+formatter(x)+'</div><div class="history-time">'+val(x.fmt)+'</div></div>').join('');
 }
 
-function empty(message) {
-  return '<div class="empty">' + esc(message) + '</div>';
+async function openPlayer(id){
+ $('modal').classList.add('open');
+ $('sheet').innerHTML=empty('Загружаем профиль…');
+ try{
+  const d=await request(API,{method:'POST',body:JSON.stringify({id:String(id)})});
+  const p=d.player||d;
+  if(!p.id)throw Error(d.error||'Игрок не найден');
+  let h='<div class="profile-head"><div class="avatar">'+initials(p.nick)+'</div><div style="min-width:0"><div class="profile-name">'+val(p.nick)+'</div><div class="profile-id">PLAYER ID · '+val(p.id)+'</div><div class="player-meta"><span class="tag">'+val(p.alliance)+'</span><span>Сервер '+val(p.server)+'</span></div></div><button class="btn btn-quiet close" id="closeModal">✕</button></div>';
+  h+='<div class="profile-grid">'+
+   '<div class="profile-stat"><span>Мощь</span><strong>'+number(p.power)+'</strong></div>'+
+   '<div class="profile-stat"><span>Убийства</span><strong>'+number(p.kills)+'</strong></div>'+
+   '<div class="profile-stat"><span>Ранг / Замок</span><strong>'+val(p.rank)+' / '+val(p.castle)+'</strong></div>'+
+   '<div class="profile-stat"><span>Рост за 7 дней</span><strong>'+number(p.growth7d)+'</strong></div></div>';
+  h+='<div class="section-sub">Первое появление: '+val(p.first_seen_fmt)+'<br>Последнее появление: '+val(p.last_seen_fmt)+'<br>Активность: '+val(p.activity)+'</div>';
+  h+=history('ИСТОРИЯ НИКОВ',p.nick_history,x=>val(x.nick||x.nickname));
+  h+=history('ИСТОРИЯ АЛЬЯНСОВ',p.alliance_history,x=>val(x.alliance));
+  if(Array.isArray(p.alliance_id_history))h+=history('ИСТОРИЯ ID АЛЬЯНСОВ',p.alliance_id_history,x=>val(x.alliance)+' · '+val(x.alliance_id));
+  h+=history('ИСТОРИЯ МОЩИ',p.power_history,x=>'Мощь '+number(x.power)+' · R'+val(x.rank)+' · K'+number(x.kills));
+  $('sheet').innerHTML=h;
+ }catch(e){
+  $('sheet').innerHTML='<div class="error">Не удалось открыть профиль: '+esc(e.message||e)+'</div><button class="btn" id="closeModal" style="margin-top:12px">Закрыть</button>';
+ }
 }
 
-function rowPlayer(id, left, right) {
-  return '<div class="row player-link" data-player="' + esc(id) + '">' +
-    '<div class="row-main">' + left + '</div>' +
-    '<div class="row-side">' + right + '</div></div>';
-}
+function closeModal(){$('modal').classList.remove('open');}
 
-async function load() {
-  if (loading) return;
-  loading = true;
-  $('refresh').disabled = true;
-  $('refresh').textContent = 'Loading…';
-
-  if (requestController) requestController.abort();
-
-  try {
-    const d = await request(API);
-    if (d.dark === undefined || !Array.isArray(d.dark)) {
-      throw new Error('Missing dark array in API response');
-    }
-
-    DATA = d;
-    $('now').textContent = d.fmt_now || new Date().toLocaleString();
-    $('total').textContent = num(d.total_players);
-    $('dark').textContent = num(d.dark_active ?? d.dark.length);
-    $('topcount').textContent = num(d.top?.length ?? 0);
-    $('auto').textContent = d.html_auto === true ? 'ON' : 'OFF';
-    $('auto').className = d.html_auto === true ? 'success' : '';
-    $('src').textContent = 'Source: ' + (d.last_success?.source || 'HTML');
-    $('last').textContent = 'Updated: ' +
-      (d.last_success?.tag || new Date().toLocaleTimeString());
-
-    renderTab(activeTab);
-  } catch (error) {
-    $('content').innerHTML =
-      '<div class="error"><b>Could not load data</b><p>' +
-      esc(getErrorMessage(error)) +
-      '</p><button class="btn" id="retry">Try again</button></div>';
-  } finally {
-    loading = false;
-    $('refresh').disabled = false;
-    $('refresh').textContent = 'Refresh ↻';
-  }
-}
-
-function renderTab(tab) {
-  activeTab = tab;
-  document.querySelectorAll('.tab').forEach(button => {
-    button.classList.toggle('active', button.dataset.tab === tab);
-  });
-
-  const content = $('content');
-  if (!DATA) {
-    content.innerHTML = empty('No data loaded');
-    return;
-  }
-
-  let html = '';
-
-  if (tab === 'roster') {
-    const players = DATA.dark || [];
-    if (!players.length) {
-      content.innerHTML = empty('No DARK members found');
-      return;
-    }
-
-    html = '<h2>DARK roster <span class="muted small">(' +
-      players.length + ')</span></h2>';
-
-    players.forEach((p, i) => {
-      html += rowPlayer(p.id,
-        '<span class="muted">' + (i + 1) + '.</span> <b>' +
-        esc(p.nick || 'Unknown') + '</b><br><span class="muted small">R' +
-        esc(p.rank ?? '—') + ' · ID ' + esc(p.id) + '</span>',
-        '<b>' + num(p.power) + '</b><br><span class="muted small">Power</span>'
-      );
-    });
-  }
-
-  if (tab === 'top') {
-    const alliances = DATA.top || [];
-    html = '<h2>Top alliances <span class="muted small">(' +
-      alliances.length + ')</span></h2>';
-
-    alliances.forEach((a, i) => {
-      html += '<div class="row"><div class="row-main">' +
-        '<span class="muted">' + (i + 1) + '.</span> <b>' +
-        esc(a.tag || '—') + '</b><br><span class="muted small">ID ' +
-        esc(a.id) + '</span></div><div class="row-side"><b>' +
-        num(a.members) + '</b><br><span class="muted small">Members</span></div></div>';
-    });
-
-    if (!alliances.length) html += empty('No alliance ranking data');
-  }
-
-  if (tab === 'transfers') {
-    const items = DATA.transfers || [];
-    html = '<h2>Alliance transfers <span class="muted small">7 days · ' +
-      items.length + '</span></h2>';
-
-    items.forEach(e => {
-      html += rowPlayer(e.pid,
-        '<b>' + esc(e.nick || 'Unknown') + '</b><br>' +
-        '<span class="muted small">ID ' + esc(e.pid) + '</span>',
-        '<span class="muted small">' + esc(e.fmt || '—') +
-        '</span><br>' + esc(e.from || '—') + ' → <b>' +
-        esc(e.to || '—') + '</b>'
-      );
-    });
-
-    if (!items.length) html += empty('No transfers in the last 7 days');
-  }
-
-  if (tab === 'new') {
-    const items = DATA.new_players || [];
-    html = '<h2>New players <span class="muted small">7 days · ' +
-      items.length + '</span></h2>';
-
-    items.forEach(e => {
-      html += rowPlayer(e.pid,
-        '<b>' + esc(e.nick || 'Unknown') + '</b><br>' +
-        '<span class="muted small">ID ' + esc(e.pid) + '</span><br>' +
-        'Alliance: <b>' + esc(e.alliance || '—') + '</b>',
-        '<span class="muted small">' + esc(e.fmt || '—') + '</span>'
-      );
-    });
-
-    if (!items.length) html += empty('No new players in the last 7 days');
-  }
-
-  content.innerHTML = html;
-}
-
-async function doSearch() {
-  const q = $('q').value.trim();
-
-  if (q.length < 2) {
-    $('searchRes').hidden = false;
-    $('searchRes').innerHTML = empty('Enter at least 2 characters');
-    return;
-  }
-
-  if (searchLoading) return;
-  searchLoading = true;
-  $('searchBtn').disabled = true;
-  $('searchBtn').textContent = '…';
-  $('searchRes').hidden = false;
-  $('searchRes').innerHTML = empty('Searching…');
-
-  try {
-    const d = await request(SAPI, {
-      method: 'POST',
-      body: JSON.stringify({q})
-    });
-
-    const results = d.found || [];
-    if (!Array.isArray(results) || results.length === 0) {
-      $('searchRes').innerHTML = empty('No results for "' + q + '"');
-      return;
-    }
-
-    let html = '<h2>Search results (' + results.length + ')</h2>';
-    results.forEach(p => {
-      html += rowPlayer(p.id,
-        '<b>' + esc(p.nick || 'Unknown') + '</b><br>' +
-        '<span class="muted small">ID ' + esc(p.id) + '</span>',
-        '<b>' + esc(p.alliance || '—') + '</b><br>' +
-        '<span class="badge">' + num(p.power) + '</span>'
-      );
-    });
-    $('searchRes').innerHTML = html;
-  } catch (error) {
-    $('searchRes').innerHTML =
-      '<div class="error"><b>Search failed</b><p>' +
-      esc(getErrorMessage(error)) + '</p></div>';
-  } finally {
-    searchLoading = false;
-    $('searchBtn').disabled = false;
-    $('searchBtn').textContent = 'Search';
-  }
-}
-
-function historySection(title, items, formatter) {
-  if (!Array.isArray(items) || items.length === 0) {
-    return '<div class="section"><div class="section-title">' +
-      esc(title) + '</div><div class="muted small">No data</div></div>';
-  }
-
-  let html = '<div class="section"><div class="section-title">' +
-    esc(title) + ' (' + items.length + ')</div>';
-
-  items.forEach(item => {
-    html += '<div class="row"><div class="row-main">' +
-      formatter(item) + '</div><div class="row-side muted small">' +
-      esc(item.fmt || '—') + '</div></div>';
-  });
-
-  return html + '</div>';
-}
-
-async function openPlayer(id) {
-  if (id === undefined || id === null || id === '') return;
-
-  $('modal').classList.add('open');
-  $('sheet').innerHTML = empty('Loading player…');
-
-  try {
-    const d = await request(API, {
-      method: 'POST',
-      body: JSON.stringify({id: String(id)})
-    });
-
-    const p = d.player || d;
-    if (!p || !p.id) {
-      throw new Error(d.error || 'Player not found');
-    }
-
-    let html = '<div class="sheet-head"><div class="sheet-title">' +
-      '<h3>' + esc(p.nick || 'Unknown player') + '</h3>' +
-      '<div class="muted small">ID ' + esc(p.id) + '</div></div>' +
-      '<button class="btn secondary" id="closeModal">Close ✕</button></div>';
-
-    html += '<div class="section muted">Alliance: <b>' +
-      esc(p.alliance || '—') + '</b> ' +
-      (p.alliance_id ? '· ID ' + esc(p.alliance_id) : '') +
-      '<br>Server: ' + esc(p.server ?? '—') +
-      ' · Excluded: ' + esc(p.excluded ?? '—') + '</div>';
-
-    html += '<div class="profile-grid">' +
-      '<div class="profile-stat">Power<b>' + num(p.power) + '</b>' +
-      '<span class="muted small">Rank ' + num(p.rank) +
-      ' · Castle ' + num(p.castle) + '</span></div>' +
-      '<div class="profile-stat">Kills<b>' + num(p.kills) + '</b>' +
-      '<span class="muted small">Activity ' + num(p.activity) +
-      '</span></div>' +
-      '<div class="profile-stat">Growth 7d<b>' +
-      num(p.growth7d) + '</b></div>' +
-      '<div class="profile-stat">First seen<b>' +
-      esc(p.first_seen_fmt || '—') + '</b>' +
-      '<span class="muted small">Last: ' +
-      esc(p.last_seen_fmt || '—') + '</span></div></div>';
-
-    html += historySection('Nickname history', p.nick_history,
-      item => esc(item.nick || item.nickname || '—'));
-
-    html += historySection('Alliance history', p.alliance_history,
-      item => esc(item.alliance || '—'));
-
-    if (Array.isArray(p.alliance_id_history)) {
-      html += historySection('Alliance ID history', p.alliance_id_history,
-        item => esc(item.alliance || '—') + ' (' +
-          esc(item.alliance_id || '—') + ')');
-    }
-
-    html += historySection('Power history', p.power_history, item =>
-      'Power ' + num(item.power) + ' · R' + num(item.rank) +
-      ' · K' + num(item.kills));
-
-    $('sheet').innerHTML = html;
-  } catch (error) {
-    $('sheet').innerHTML =
-      '<div class="error"><b>Could not load player</b><p>' +
-      esc(getErrorMessage(error)) + '</p></div>' +
-      '<button class="btn" id="closeModal">Close</button>';
-  }
-}
-
-/* Event delegation: dynamic player rows never contain executable HTML */
-document.addEventListener('click', event => {
-  const tab = event.target.closest('[data-tab]');
-  if (tab) {
-    renderTab(tab.dataset.tab);
-    return;
-  }
-
-  const player = event.target.closest('[data-player]');
-  if (player) {
-    openPlayer(player.dataset.player);
-    return;
-  }
-
-  if (event.target.closest('#refresh')) load();
-  if (event.target.closest('#searchBtn')) doSearch();
-  if (event.target.closest('#closeModal')) closeModal();
-  if (event.target.closest('#retry')) load();
-
-  if (event.target === $('modal')) closeModal();
+document.addEventListener('click',e=>{
+ const tab=e.target.closest('[data-tab]');
+ if(tab){renderTab(tab.dataset.tab);return;}
+ const player=e.target.closest('[data-player]');
+ if(player){openPlayer(player.dataset.player);return;}
+ if(e.target.closest('#refresh')||e.target.closest('#retry'))load();
+ if(e.target.closest('#searchBtn'))doSearch();
+ if(e.target.closest('#closeModal')||e.target===$('modal'))closeModal();
 });
-
-$('q').addEventListener('keydown', event => {
-  if (event.key === 'Enter') doSearch();
-});
-
-function closeModal() {
-  $('modal').classList.remove('open');
-}
-
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') closeModal();
-});
-
-try {
-  const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
-} catch (_) {}
-
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+try{if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}
 load();
 </script>
 </body>
