@@ -1,338 +1,536 @@
 
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
 <title>DARK #390 — Last Asylum</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+:root{
+  color-scheme:dark;
+  --bg:#0b0f14;--panel:#0e1a24;--card:#111820;
+  --border:#1d2a36;--text:#e6eef6;--muted:#93a3b8;
+  --blue:#38bdf8;--red:#fb7185;--green:#34d399;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#0b0f14;color:#e6eef6;font:14px sans-serif}
-.wrap{max-width:760px;margin:0 auto;padding:14px}
-.hero{background:#0e1a24;border:1px solid #1d2a36;border-radius:12px;padding:12px}
-h1{font-size:22px;margin:4px 0 10px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.pill{background:#111820;border:1px solid #1d2a36;border-radius:10px;padding:8px;display:flex;justify-content:space-between;gap:8px}
-.tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto}
-.tab{padding:7px 10px;border-radius:999px;background:#111820;border:1px solid #1d2a36;color:#93a3b8;cursor:pointer;white-space:nowrap}
-.tab.active{background:#0f2436;color:#fff}
-.card{background:#111820;border:1px solid #1d2a36;border-radius:12px;padding:10px;overflow-wrap:anywhere}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #15202c}
-.row:last-child{border-bottom:0}
-.muted{color:#93a3b8}
-.search{display:flex;gap:6px;margin:8px 0}
-.search input{min-width:0;flex:1;background:#0d1722;color:#fff;border:1px solid #1d2a36;border-radius:10px;padding:10px}
-.btn{background:#123055;color:#fff;border:1px solid #20406a;border-radius:10px;padding:8px 12px;cursor:pointer}
+body{margin:0;background:var(--bg);color:var(--text);
+font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}
+button{touch-action:manipulation}
+.wrap{max-width:900px;margin:auto;padding:14px;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.hero{background:linear-gradient(135deg,#102538,#0e1a24 65%);
+border:1px solid var(--border);border-radius:16px;padding:16px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-size:21px;line-height:1.25;margin:0 0 7px}
+h2{font-size:17px;margin:0 0 12px}
+h3{font-size:16px;margin:0}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:15px}
+.pill{min-width:0;background:#111820;border:1px solid var(--border);border-radius:11px;padding:10px}
+.pill span{display:block;color:var(--muted);font-size:12px}
+.pill b{display:block;margin-top:3px;font-size:19px;overflow-wrap:anywhere}
+.btn{background:#123055;color:#fff;border:1px solid #204b70;border-radius:10px;padding:9px 12px;cursor:pointer}
 .btn:disabled{opacity:.5;cursor:wait}
-.status{margin-top:8px;font-size:12px;color:#93a3b8}
-@media(max-width:420px){.wrap{padding:8px}h1{font-size:19px}.row{font-size:12px}.pill{font-size:12px}}
+.btn.secondary{background:#111820;border-color:var(--border)}
+.search{display:flex;gap:7px;margin:12px 0}
+input{min-width:0;width:100%;background:#0d1722;color:#fff;border:1px solid var(--border);border-radius:10px;padding:11px;outline:none}
+input:focus{border-color:#38bdf8}
+.tabs{display:flex;gap:6px;margin:12px 0;overflow-x:auto;padding-bottom:3px}
+.tab{padding:8px 12px;border-radius:999px;background:#111820;border:1px solid var(--border);color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab.active{background:#0f2a40;color:#fff;border-color:#245276}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;min-width:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid #1a2631;min-width:0}
+.row:last-child{border-bottom:0}
+.row-main{min-width:0;overflow-wrap:anywhere}
+.row-side{text-align:right;flex-shrink:0;overflow-wrap:anywhere;max-width:45%}
+.player-link{cursor:pointer}
+.player-link:hover{background:#15222e}
+.badge{display:inline-block;font-size:11px;padding:2px 7px;border-radius:999px;background:#0e2233;border:1px solid #1e3a52;color:#9ecbff}
+.error{color:var(--red);overflow-wrap:anywhere}
+.success{color:var(--green)}
+.footer{margin-top:10px;font-size:11px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.empty{text-align:center;padding:24px 10px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
+.modal.open{display:flex}
+.sheet{width:100%;max-width:780px;max-height:88vh;overflow:auto;background:#0e1620;border:1px solid var(--border);border-radius:16px;padding:15px}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sheet-title{min-width:0;overflow-wrap:anywhere}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.profile-stat{background:#111820;border:1px solid var(--border);border-radius:10px;padding:11px;overflow-wrap:anywhere}
+.profile-stat b{display:block;margin-top:4px;font-size:16px}
+.section{margin-top:16px}
+.section-title{font-weight:700;margin-bottom:5px}
+@media(max-width:520px){
+ .wrap{padding:10px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+ .hero{padding:13px}
+ h1{font-size:19px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pill b{font-size:18px}
+ .row{gap:7px}
+ .row-side{max-width:42%;font-size:12px}
+ .search .btn{padding:9px}
+ .tab{padding:8px 10px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="hero">
-    <h1>DARK #390 — Last Asylum</h1>
-    <div class="muted">
-      <span id="interval">...</span> |
-      <span id="now">...</span>
+  <header class="hero">
+    <div class="head">
+      <div>
+        <h1>DARK #390 — Last Asylum</h1>
+        <div class="muted small">
+          Server #390 · <span id="now">Connecting…</span>
+        </div>
+      </div>
+      <button class="btn" id="refresh">Refresh ↻</button>
     </div>
-    <div class="grid">
-      <div class="pill"><span class="muted">Players</span><b id="total">...</b></div>
-      <div class="pill"><span class="muted">DARK</span><b id="dark">...</b></div>
-      <div class="pill"><span class="muted">Top</span><b id="topcount">...</b></div>
-      <div class="pill"><span class="muted">Auto</span><b id="auto">...</b></div>
+    <div class="stats">
+      <div class="pill"><span>Players tracked</span><b id="total">—</b></div>
+      <div class="pill"><span>DARK members</span><b id="dark">—</b></div>
+      <div class="pill"><span>Top alliances</span><b id="topcount">—</b></div>
+      <div class="pill"><span>HTML Auto</span><b id="auto">—</b></div>
     </div>
-  </div>
+  </header>
 
   <div class="search">
-    <input id="q" placeholder="Search 2+ letters" autocomplete="off">
-    <button id="searchBtn" class="btn" onclick="doSearch()">Find</button>
+    <input id="q" type="search" placeholder="Nickname, old nickname or player ID" autocomplete="off">
+    <button class="btn" id="searchBtn">Search</button>
   </div>
+  <div id="searchRes" class="card" hidden></div>
 
-  <div id="searchRes" class="card" style="display:none"></div>
+  <nav class="tabs" aria-label="Sections">
+    <button class="tab active" data-tab="roster">Roster DARK</button>
+    <button class="tab" data-tab="top">Top #390</button>
+    <button class="tab" data-tab="transfers">Transfers</button>
+    <button class="tab" data-tab="new">New players</button>
+  </nav>
 
-  <div class="tabs">
-    <div class="tab active" data-t="roster" onclick="switchTab('roster')">Roster DARK</div>
-    <div class="tab" data-t="top" onclick="switchTab('top')">Top #390</div>
-    <div class="tab" data-t="transfers" onclick="switchTab('transfers')">Transfers</div>
-    <div class="tab" data-t="new" onclick="switchTab('new')">New</div>
-  </div>
+  <main id="content" class="card" aria-live="polite">
+    <div class="empty">Loading data…</div>
+  </main>
 
-  <div id="content" class="card">Loading...</div>
+  <footer class="footer muted">
+    <span id="src">Source: —</span>
+    <span id="last">Last update: —</span>
+  </footer>
+</div>
 
-  <div class="status">
-    <span id="src">...</span> |
-    <span id="last">...</span>
-    <button class="btn" onclick="load()" style="float:right;padding:4px 8px">Refresh</button>
-  </div>
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Player details">
+  <div class="sheet" id="sheet"></div>
 </div>
 
 <script>
-const API = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABq2cVOwC3V69i9Uyv8cPjlKvq7VyzsDnKK69Euq5joaQ9Nbsy1LKVK6UPUnMkAyzwAs1xSAoMsodQ4ZfBmbdxaMCZgS5UJXqvqcRaKBU-1n8wbzQKqbW1pQ6w6y4wjLox1C_-XKfTUWW0tiaJpQy6vvI-ZLlPFDjZObYoViDqp-dW16B-Ehh16GowpY3C8ZEDpv3HS';
+'use strict';
 
-const SAPI = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABq2cVO8pJTw1Fdm2CJmznORxS7jYeoVLnz8-_e4oiRNw8QXis7URmFGAPWLO6CM2rWLTkJ9vSg_NYO5ZBV2m9d9mA4Biool1GkAZ0wPGXJdlD2OoZ_VnjqqWHY8IQRlyZPWSfxIx3c-LmYW1E7me1qHlYa_UMkmnh4_-Fp8JbogxrnV0SZ0n8mBPtXuVU93zlv_yr2';
+/* TBC Mini App endpoints */
+const API = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN80tl_7pwh6PhlXOGsO6fJ82jA4vgoGJco-AfNJfk1XZEY57hhZpLaO5P-3QGoGwuUPcWmqZ9TIsz_eWBNoKRPG2QNrZp4tUzsxykjxufs6I01CsXM4728aYGD50ldJDuaQ44seiDtLgnp1E3_HHL_2wXYxme7SvdYNO2eWRL2yyXDRDVkReGCPdK78KnATjI6';
+
+const SAPI = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN8b1BNTKFw2OuefuWVwEe3DP7RJq_9FLN0VP5Egu7iZlyQzDrtPhRBKxety4eG93eHZWOYpX41Tfc_FtfFrUZoUQQoOxnEilzVBSMkG0BNXzWfZ6bE3aH3pnedNUXLEnX6cjI-aRvybwa3HEjbDBFFnS2Qg-HkNaVl7HzPOmW3g16UFv1bOuXcBfVM61w8k7z-';
 
 let DATA = null;
-let currentTab = 'roster';
+let activeTab = 'roster';
 let loading = false;
+let searchLoading = false;
+let requestController = null;
 
-function el(id) {
-  return document.getElementById(id);
-}
+const $ = id => document.getElementById(id);
 
 function esc(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[ch]);
 }
 
-function showError(message) {
-  el('content').innerHTML =
-    '<span style="color:#fb7185">Error: ' + esc(message) + '</span>';
+function num(value) {
+  if (value === null || value === undefined || value === '') return '—';
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toLocaleString('en-US') : esc(value);
 }
 
-async function fetchJSON(url) {
-  const response = await fetch(url, {cache: 'no-store'});
-  const text = await response.text();
+function showTime(value) {
+  if (!value) return '—';
+  return esc(value);
+}
 
-  let json;
+function unwrap(json) {
+  let data = json;
+  for (let i = 0; i < 3 && data && data.result !== undefined; i++) {
+    data = data.result;
+  }
+  if (!data || typeof data !== 'object') {
+    throw new Error('Unexpected API response');
+  }
+  if (data.error) throw new Error(String(data.error));
+  return data;
+}
+
+async function request(url, options = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
+
   try {
-    json = JSON.parse(text);
-  } catch {
-    throw new Error('API returned non-JSON (HTTP ' + response.status + ')');
-  }
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/json',
+        ...(options.body ? {'Content-Type':'application/json'} : {}),
+        ...options.headers
+      }
+    });
 
-  if (!response.ok) {
-    throw new Error('HTTP ' + response.status);
-  }
+    const raw = await response.text();
+    let json;
 
-  if (json && json.error) {
-    throw new Error(
-      typeof json.error === 'string'
-        ? json.error
-        : JSON.stringify(json.error)
-    );
-  }
+    try {
+      json = JSON.parse(raw);
+    } catch {
+      throw new Error(
+        'API returned invalid JSON (HTTP ' + response.status + '): ' +
+        raw.slice(0, 100)
+      );
+    }
 
-  return json;
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status + ': ' +
+        (json.message || json.error || 'Request failed'));
+    }
+
+    return unwrap(json);
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('Request timed out after 20 seconds');
+    }
+    if (error instanceof TypeError) {
+      throw new Error('Network/CORS error. Check the TBC API settings.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function getErrorMessage(error) {
+  return error && error.message ? error.message : String(error);
+}
+
+function empty(message) {
+  return '<div class="empty">' + esc(message) + '</div>';
+}
+
+function rowPlayer(id, left, right) {
+  return '<div class="row player-link" data-player="' + esc(id) + '">' +
+    '<div class="row-main">' + left + '</div>' +
+    '<div class="row-side">' + right + '</div></div>';
 }
 
 async function load() {
   if (loading) return;
   loading = true;
-  el('content').textContent = 'Loading...';
+  $('refresh').disabled = true;
+  $('refresh').textContent = 'Loading…';
+
+  if (requestController) requestController.abort();
 
   try {
-    const tg = window.Telegram && window.Telegram.WebApp;
-    if (tg) {
-      tg.ready();
-      tg.expand();
+    const d = await request(API);
+    if (d.dark === undefined || !Array.isArray(d.dark)) {
+      throw new Error('Missing dark array in API response');
     }
 
-    const json = await fetchJSON(API);
-    const data = json.result ?? json.data ?? json;
+    DATA = d;
+    $('now').textContent = d.fmt_now || new Date().toLocaleString();
+    $('total').textContent = num(d.total_players);
+    $('dark').textContent = num(d.dark_active ?? d.dark.length);
+    $('topcount').textContent = num(d.top?.length ?? 0);
+    $('auto').textContent = d.html_auto === true ? 'ON' : 'OFF';
+    $('auto').className = d.html_auto === true ? 'success' : '';
+    $('src').textContent = 'Source: ' + (d.last_success?.source || 'HTML');
+    $('last').textContent = 'Updated: ' +
+      (d.last_success?.tag || new Date().toLocaleTimeString());
 
-    if (!data || typeof data !== 'object') {
-      throw new Error('Unexpected API response');
-    }
-
-    DATA = data;
-
-    el('interval').textContent =
-      data.interval != null ? (data.interval / 60) + 'm' : '-';
-
-    el('now').textContent = data.fmt_now ?? '';
-    el('total').textContent = data.total_players ?? '-';
-
-    el('dark').textContent =
-      data.dark_active ?? (Array.isArray(data.dark) ? data.dark.length : 0);
-
-    el('topcount').textContent =
-      Array.isArray(data.top) ? data.top.length : 0;
-
-    el('auto').textContent = data.html_auto === true ? 'ON' : 'OFF';
-
-    el('src').textContent = data.last_success
-      ? data.last_success.source ?? 'html'
-      : 'html';
-
-    el('last').textContent = data.last_success
-      ? (data.last_success.tag ?? '') + ' ' +
-        (data.last_success.count ?? '')
-      : '';
-
-    switchTab(currentTab);
+    renderTab(activeTab);
   } catch (error) {
-    showError(error.message || String(error));
+    $('content').innerHTML =
+      '<div class="error"><b>Could not load data</b><p>' +
+      esc(getErrorMessage(error)) +
+      '</p><button class="btn" id="retry">Try again</button></div>';
   } finally {
     loading = false;
+    $('refresh').disabled = false;
+    $('refresh').textContent = 'Refresh ↻';
   }
 }
 
-function switchTab(tab) {
-  currentTab = tab;
-
-  document.querySelectorAll('.tab').forEach(function(item) {
-    item.classList.toggle('active', item.dataset.t === tab);
+function renderTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(button => {
+    button.classList.toggle('active', button.dataset.tab === tab);
   });
 
-  const content = el('content');
-
+  const content = $('content');
   if (!DATA) {
-    content.textContent = 'Loading...';
+    content.innerHTML = empty('No data loaded');
     return;
   }
 
   let html = '';
 
   if (tab === 'roster') {
-    const players = Array.isArray(DATA.dark) ? DATA.dark : [];
-
+    const players = DATA.dark || [];
     if (!players.length) {
-      html = '<div class="muted">Empty</div>';
+      content.innerHTML = empty('No DARK members found');
+      return;
     }
 
-    players.forEach(function(player, index) {
-      html += `
-        <div class="row">
-          <div>
-            <span class="muted">${index + 1}.</span>
-            <b>${esc(player.nick)}</b>
-            <span class="muted">R${esc(player.rank || '-')}</span>
-          </div>
-          <div style="text-align:right">
-            <b>${esc(player.power ?? 0)}</b><br>
-            <span class="muted">${esc(player.id)}</span>
-          </div>
-        </div>`;
+    html = '<h2>DARK roster <span class="muted small">(' +
+      players.length + ')</span></h2>';
+
+    players.forEach((p, i) => {
+      html += rowPlayer(p.id,
+        '<span class="muted">' + (i + 1) + '.</span> <b>' +
+        esc(p.nick || 'Unknown') + '</b><br><span class="muted small">R' +
+        esc(p.rank ?? '—') + ' · ID ' + esc(p.id) + '</span>',
+        '<b>' + num(p.power) + '</b><br><span class="muted small">Power</span>'
+      );
     });
   }
 
-  else if (tab === 'top') {
-    const alliances = Array.isArray(DATA.top) ? DATA.top : [];
+  if (tab === 'top') {
+    const alliances = DATA.top || [];
+    html = '<h2>Top alliances <span class="muted small">(' +
+      alliances.length + ')</span></h2>';
 
-    alliances.forEach(function(alliance, index) {
-      html += `
-        <div class="row">
-          <div>
-            ${index + 1}. <b>${esc(alliance.tag)}</b>
-            <span class="muted">${esc(alliance.id)}</span>
-          </div>
-          <div><b>${esc(alliance.members ?? '-')}</b></div>
-        </div>`;
+    alliances.forEach((a, i) => {
+      html += '<div class="row"><div class="row-main">' +
+        '<span class="muted">' + (i + 1) + '.</span> <b>' +
+        esc(a.tag || '—') + '</b><br><span class="muted small">ID ' +
+        esc(a.id) + '</span></div><div class="row-side"><b>' +
+        num(a.members) + '</b><br><span class="muted small">Members</span></div></div>';
     });
 
-    if (!html) html = '<div class="muted">Нет данных</div>';
+    if (!alliances.length) html += empty('No alliance ranking data');
   }
 
-  else if (tab === 'transfers') {
-    const transfers = Array.isArray(DATA.transfers)
-      ? DATA.transfers : [];
+  if (tab === 'transfers') {
+    const items = DATA.transfers || [];
+    html = '<h2>Alliance transfers <span class="muted small">7 days · ' +
+      items.length + '</span></h2>';
 
-    transfers.forEach(function(event) {
-      html += `
-        <div class="row">
-          <div>
-            <b>${esc(event.nick)}</b>
-            <span class="muted">${esc(event.pid)}</span>
-          </div>
-          <div style="text-align:right">
-            <div class="muted">${esc(event.fmt)}</div>
-            <div>${esc(event.from)} → <b>${esc(event.to)}</b></div>
-          </div>
-        </div>`;
+    items.forEach(e => {
+      html += rowPlayer(e.pid,
+        '<b>' + esc(e.nick || 'Unknown') + '</b><br>' +
+        '<span class="muted small">ID ' + esc(e.pid) + '</span>',
+        '<span class="muted small">' + esc(e.fmt || '—') +
+        '</span><br>' + esc(e.from || '—') + ' → <b>' +
+        esc(e.to || '—') + '</b>'
+      );
     });
 
-    if (!html) html = '<div class="muted">Нет переходов 7д</div>';
+    if (!items.length) html += empty('No transfers in the last 7 days');
   }
 
-  else if (tab === 'new') {
-    const players = Array.isArray(DATA.new_players)
-      ? DATA.new_players : [];
+  if (tab === 'new') {
+    const items = DATA.new_players || [];
+    html = '<h2>New players <span class="muted small">7 days · ' +
+      items.length + '</span></h2>';
 
-    players.forEach(function(player) {
-      html += `
-        <div class="row">
-          <div>
-            <b>${esc(player.nick)}</b>
-            <span class="muted">${esc(player.pid)}</span>
-            → <b>${esc(player.alliance)}</b>
-          </div>
-          <div class="muted">${esc(player.fmt)}</div>
-        </div>`;
+    items.forEach(e => {
+      html += rowPlayer(e.pid,
+        '<b>' + esc(e.nick || 'Unknown') + '</b><br>' +
+        '<span class="muted small">ID ' + esc(e.pid) + '</span><br>' +
+        'Alliance: <b>' + esc(e.alliance || '—') + '</b>',
+        '<span class="muted small">' + esc(e.fmt || '—') + '</span>'
+      );
     });
 
-    if (!html) html = '<div class="muted">Нет новых 7д</div>';
+    if (!items.length) html += empty('No new players in the last 7 days');
   }
 
   content.innerHTML = html;
 }
 
 async function doSearch() {
-  const query = el('q').value.trim();
+  const q = $('q').value.trim();
 
-  if (query.length < 2) {
-    el('searchRes').style.display = 'block';
-    el('searchRes').textContent = 'Введите минимум 2 символа';
+  if (q.length < 2) {
+    $('searchRes').hidden = false;
+    $('searchRes').innerHTML = empty('Enter at least 2 characters');
     return;
   }
 
-  const box = el('searchRes');
-  const button = el('searchBtn');
-
-  box.style.display = 'block';
-  box.textContent = 'Search...';
-  button.disabled = true;
+  if (searchLoading) return;
+  searchLoading = true;
+  $('searchBtn').disabled = true;
+  $('searchBtn').textContent = '…';
+  $('searchRes').hidden = false;
+  $('searchRes').innerHTML = empty('Searching…');
 
   try {
-    const url = SAPI + '&q=' + encodeURIComponent(query);
-    const json = await fetchJSON(url);
-    const data = json.result ?? json.data ?? json;
-    const found = Array.isArray(data.found) ? data.found : [];
+    const d = await request(SAPI, {
+      method: 'POST',
+      body: JSON.stringify({q})
+    });
 
-    if (!found.length) {
-      box.innerHTML =
-        '<div class="muted">' + esc(query) + ' не найдено</div>';
+    const results = d.found || [];
+    if (!Array.isArray(results) || results.length === 0) {
+      $('searchRes').innerHTML = empty('No results for "' + q + '"');
       return;
     }
 
-    let html = '<b>Найдено ' + found.length + '</b>';
-
-    found.forEach(function(player) {
-      html += `
-        <div class="row">
-          <div>
-            <b>${esc(player.nick)}</b>
-            <span class="muted">${esc(player.id)}</span>
-          </div>
-          <div><b>${esc(player.alliance)}</b></div>
-        </div>`;
+    let html = '<h2>Search results (' + results.length + ')</h2>';
+    results.forEach(p => {
+      html += rowPlayer(p.id,
+        '<b>' + esc(p.nick || 'Unknown') + '</b><br>' +
+        '<span class="muted small">ID ' + esc(p.id) + '</span>',
+        '<b>' + esc(p.alliance || '—') + '</b><br>' +
+        '<span class="badge">' + num(p.power) + '</span>'
+      );
     });
-
-    box.innerHTML = html;
+    $('searchRes').innerHTML = html;
   } catch (error) {
-    box.innerHTML =
-      '<span style="color:#fb7185">Error: ' +
-      esc(error.message || String(error)) + '</span>';
+    $('searchRes').innerHTML =
+      '<div class="error"><b>Search failed</b><p>' +
+      esc(getErrorMessage(error)) + '</p></div>';
   } finally {
-    button.disabled = false;
+    searchLoading = false;
+    $('searchBtn').disabled = false;
+    $('searchBtn').textContent = 'Search';
   }
 }
 
-el('q').addEventListener('keydown', function(event) {
+function historySection(title, items, formatter) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return '<div class="section"><div class="section-title">' +
+      esc(title) + '</div><div class="muted small">No data</div></div>';
+  }
+
+  let html = '<div class="section"><div class="section-title">' +
+    esc(title) + ' (' + items.length + ')</div>';
+
+  items.forEach(item => {
+    html += '<div class="row"><div class="row-main">' +
+      formatter(item) + '</div><div class="row-side muted small">' +
+      esc(item.fmt || '—') + '</div></div>';
+  });
+
+  return html + '</div>';
+}
+
+async function openPlayer(id) {
+  if (id === undefined || id === null || id === '') return;
+
+  $('modal').classList.add('open');
+  $('sheet').innerHTML = empty('Loading player…');
+
+  try {
+    const d = await request(API, {
+      method: 'POST',
+      body: JSON.stringify({id: String(id)})
+    });
+
+    const p = d.player || d;
+    if (!p || !p.id) {
+      throw new Error(d.error || 'Player not found');
+    }
+
+    let html = '<div class="sheet-head"><div class="sheet-title">' +
+      '<h3>' + esc(p.nick || 'Unknown player') + '</h3>' +
+      '<div class="muted small">ID ' + esc(p.id) + '</div></div>' +
+      '<button class="btn secondary" id="closeModal">Close ✕</button></div>';
+
+    html += '<div class="section muted">Alliance: <b>' +
+      esc(p.alliance || '—') + '</b> ' +
+      (p.alliance_id ? '· ID ' + esc(p.alliance_id) : '') +
+      '<br>Server: ' + esc(p.server ?? '—') +
+      ' · Excluded: ' + esc(p.excluded ?? '—') + '</div>';
+
+    html += '<div class="profile-grid">' +
+      '<div class="profile-stat">Power<b>' + num(p.power) + '</b>' +
+      '<span class="muted small">Rank ' + num(p.rank) +
+      ' · Castle ' + num(p.castle) + '</span></div>' +
+      '<div class="profile-stat">Kills<b>' + num(p.kills) + '</b>' +
+      '<span class="muted small">Activity ' + num(p.activity) +
+      '</span></div>' +
+      '<div class="profile-stat">Growth 7d<b>' +
+      num(p.growth7d) + '</b></div>' +
+      '<div class="profile-stat">First seen<b>' +
+      esc(p.first_seen_fmt || '—') + '</b>' +
+      '<span class="muted small">Last: ' +
+      esc(p.last_seen_fmt || '—') + '</span></div></div>';
+
+    html += historySection('Nickname history', p.nick_history,
+      item => esc(item.nick || item.nickname || '—'));
+
+    html += historySection('Alliance history', p.alliance_history,
+      item => esc(item.alliance || '—'));
+
+    if (Array.isArray(p.alliance_id_history)) {
+      html += historySection('Alliance ID history', p.alliance_id_history,
+        item => esc(item.alliance || '—') + ' (' +
+          esc(item.alliance_id || '—') + ')');
+    }
+
+    html += historySection('Power history', p.power_history, item =>
+      'Power ' + num(item.power) + ' · R' + num(item.rank) +
+      ' · K' + num(item.kills));
+
+    $('sheet').innerHTML = html;
+  } catch (error) {
+    $('sheet').innerHTML =
+      '<div class="error"><b>Could not load player</b><p>' +
+      esc(getErrorMessage(error)) + '</p></div>' +
+      '<button class="btn" id="closeModal">Close</button>';
+  }
+}
+
+/* Event delegation: dynamic player rows never contain executable HTML */
+document.addEventListener('click', event => {
+  const tab = event.target.closest('[data-tab]');
+  if (tab) {
+    renderTab(tab.dataset.tab);
+    return;
+  }
+
+  const player = event.target.closest('[data-player]');
+  if (player) {
+    openPlayer(player.dataset.player);
+    return;
+  }
+
+  if (event.target.closest('#refresh')) load();
+  if (event.target.closest('#searchBtn')) doSearch();
+  if (event.target.closest('#closeModal')) closeModal();
+  if (event.target.closest('#retry')) load();
+
+  if (event.target === $('modal')) closeModal();
+});
+
+$('q').addEventListener('keydown', event => {
   if (event.key === 'Enter') doSearch();
 });
 
-load();
+function closeModal() {
+  $('modal').classList.remove('open');
+}
 
-// Обновление данных каждые 5 минут.
-setInterval(function() {
-  if (!document.hidden) load();
-}, 5 * 60 * 1000);
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeModal();
+});
+
+try {
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    tg.ready();
+    tg.expand();
+  }
+} catch (_) {}
+
+load();
 </script>
 </body>
 </html>
