@@ -16,6 +16,7 @@ body{margin:0;background:#0b0f14;color:#e6eef6;font:14px sans-serif}
 .tab.active{background:#0f2436;color:#fff}
 .card{background:#111820;border:1px solid #1d2a36;border-radius:12px;padding:10px}
 .row{display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #15202c}
+.row:last-child{border:0}
 .badge{font-size:11px;padding:2px 6px;border-radius:999px;background:#0e2233;border:1px solid #1e3a52;color:#9ecbff}
 .search{display:flex;gap:6px;margin:8px 0}
 .search input{flex:1;background:#0d1722;color:#fff;border:1px solid #1d2a36;border-radius:10px;padding:8px}
@@ -33,32 +34,30 @@ body{margin:0;background:#0b0f14;color:#e6eef6;font:14px sans-serif}
 <div class="pill"><span class="muted">Top</span><b id="topcount">...</b></div>
 <div class="pill"><span class="muted">Auto</span><b id="auto">...</b></div>
 </div></div>
-
-<div class="search"><input id="q" placeholder="Поиск 2+ буквы"><button class="btn" onclick="doSearch()">Найти</button></div>
+<div class="search"><input id="q" placeholder="Search 2+ letters"><button class="btn" onclick="doSearch()">Find</button></div>
 <div id="searchRes" class="card" style="display:none"></div>
 <div class="tabs">
-<div class="tab active" data-t="roster" onclick="switchTab('roster')">Ростер DARK</div>
-<div class="tab" data-t="top" onclick="switchTab('top')">Топ #390</div>
-<div class="tab" data-t="transfers" onclick="switchTab('transfers')">Переходы</div>
-<div class="tab" data-t="new" onclick="switchTab('new')">Новые</div>
+<div class="tab active" data-t="roster" onclick="switchTab('roster')">Roster DARK</div>
+<div class="tab" data-t="top" onclick="switchTab('top')">Top #390</div>
+<div class="tab" data-t="transfers" onclick="switchTab('transfers')">Transfers</div>
+<div class="tab" data-t="new" onclick="switchTab('new')">New</div>
 </div>
-<div id="content" class="card">Загрузка...</div>
+<div id="content" class="card">Loading...</div>
 <div class="muted" style="margin-top:8px;font-size:11px"><span id="src">...</span> | <span id="last">...</span></div>
 </div>
-
 <script>
-const API='https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_87d33343';
-const SAPI='https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_cf51413c';
+const API='https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_c5bf8c98';
+const SAPI='https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_193c223d';
 let DATA=null;
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 async function load(){
  try{
   let tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}
   let r=await fetch(API,{method:'POST',body:'{}'});
-  let t=await r.text(); let j={}; try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,80))}
+  let t=await r.text(); let j={}; try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,120))}
   let d=j.result||j.data||j; if(d&&d.error) throw new Error(d.error);
   DATA=d;
-  document.getElementById('interval').textContent=(d.interval?(d.interval/60)+'м':'-');
+  document.getElementById('interval').textContent=(d.interval?(d.interval/60)+'m':'-');
   document.getElementById('now').textContent=d.fmt_now||'';
   document.getElementById('total').textContent=d.total_players??'-';
   document.getElementById('dark').textContent=d.dark_active??(d.dark?d.dark.length:'0');
@@ -71,10 +70,10 @@ async function load(){
 }
 function switchTab(t){
  document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x.dataset.t===t)});
- let c=document.getElementById('content'); if(!DATA){c.textContent='Загрузка...';return;}
+ let c=document.getElementById('content'); if(!DATA){c.textContent='Loading...';return;}
  if(t==='roster'){
-  let h=''; let dark=DATA.dark||[]; if(dark.length===0) h='<div class="muted">Пусто</div>';
-  else dark.forEach(function(p,i){h+='<div class="row"><div><span class="muted">'+String(i+1)+'.</span> <b>'+esc(p.nick)+'</b> <span class="badge">R'+esc(p.rank||'-')+'</span></div><div style="text-align:right"><b>'+String(p.power||0)+'</b><br><span class="muted">'+esc(p.id)+'</span></div></div>';});
+  let h=''; let dark=DATA.dark||[]; if(dark.length===0) h='<div class="muted">Empty</div>';
+  else dark.forEach(function(p,i){h+='<div class="row"><div><span class="muted">'+String(i+1)+'.</span> <b>'+esc(p.nick)+'</b> <span class="muted">R'+esc(p.rank||'-')+'</span></div><div style="text-align:right"><b>'+String(p.power||0)+'</b><br><span class="muted">'+esc(p.id)+'</span></div></div>';});
   c.innerHTML=h;
  } else if(t==='top'){
   let h=''; (DATA.top||[]).forEach(function(a,i){h+='<div class="row"><div>'+String(i+1)+'. <b>'+esc(a.tag)+'</b> <span class="muted">'+esc(a.id)+'</span></div><div><b>'+a.members+'</b></div></div>';}); c.innerHTML=h||'Нет данных';
@@ -86,7 +85,7 @@ function switchTab(t){
 }
 async function doSearch(){
  let q=document.getElementById('q').value.trim(); if(q.length<2){alert('2+');return;}
- let box=document.getElementById('searchRes'); box.style.display='block'; box.textContent='Поиск...';
+ let box=document.getElementById('searchRes'); box.style.display='block'; box.textContent='Search...';
  try{
   let r=await fetch(SAPI,{method:'POST',body:JSON.stringify({q:q})});
   let t=await r.text(); let j={}; try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,80))}
