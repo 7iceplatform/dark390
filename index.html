@@ -54,7 +54,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 async function load(){
  try{
   let tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}
-  let r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+  let r=await fetch(API,{method:'POST',body:'{}'});
   let t=await r.text(); let j={}; try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,80))}
   let d=j.result||j.data||j; if(d&&d.error) throw new Error(d.error);
   DATA=d;
@@ -88,7 +88,7 @@ async function doSearch(){
  let q=document.getElementById('q').value.trim(); if(q.length<2){alert('2+');return;}
  let box=document.getElementById('searchRes'); box.style.display='block'; box.textContent='Поиск...';
  try{
-  let r=await fetch(SAPI,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:q})});
+  let r=await fetch(SAPI,{method:'POST',body:JSON.stringify({q:q})});
   let t=await r.text(); let j={}; try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,80))}
   let d=j.result||j.data||j; let arr=d.found||[]; if(!arr||arr.length===0) box.innerHTML='<div class="muted">'+esc(q)+' не найдено</div>';
   else{let h='<b>Найдено '+arr.length+'</b>'; arr.forEach(function(p){h+='<div class="row"><div><b>'+esc(p.nick)+'</b> <span class="muted">'+esc(p.id)+'</span></div><div><b>'+esc(p.alliance)+'</b></div></div>'}); box.innerHTML=h;}
