@@ -1,150 +1,99 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DARK #390 — Last Asylum</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--bg:#0b0f14;--card:#111820;--line:#1d2a36;--text:#e6eef6;--muted:#93a3b8}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,system-ui,Arial}
+body{margin:0;background:#0b0f14;color:#e6eef6;font:14px sans-serif}
 .wrap{max-width:760px;margin:0 auto;padding:14px}
-.hero{background:linear-gradient(180deg,#0e1a24 0%,#0b0f14 100%);border:1px solid var(--line);border-radius:14px;padding:12px}
-.hero h1{margin:0;font-size:18px}
-.sub{color:var(--muted);font-size:12px;margin-top:4px}
+.hero{background:#0e1a24;border:1px solid #1d2a36;border-radius:12px;padding:12px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.pill{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;justify-content:space-between}
-.pill b{font-size:16px}
+.pill{background:#111820;border:1px solid #1d2a36;border-radius:10px;padding:8px;display:flex;justify-content:space-between}
 .tabs{display:flex;gap:6px;margin:10px 0;overflow:auto}
-.tab{padding:7px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted);white-space:nowrap;cursor:pointer}
-.tab.active{background:#0f2436;color:var(--text);border-color:#1f3a52}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px}
-.row{display:flex;justify-content:space-between;padding:7px;border-bottom:1px solid #15202c}
-.row:last-child{border:0}
+.tab{padding:7px 10px;border-radius:999px;background:#111820;border:1px solid #1d2a36;color:#93a3b8;cursor:pointer;white-space:nowrap}
+.tab.active{background:#0f2436;color:#fff}
+.card{background:#111820;border:1px solid #1d2a36;border-radius:12px;padding:10px}
+.row{display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #15202c}
 .badge{font-size:11px;padding:2px 6px;border-radius:999px;background:#0e2233;border:1px solid #1e3a52;color:#9ecbff}
 .search{display:flex;gap:6px;margin:8px 0}
-.search input{flex:1;background:#0d1722;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px}
-.btn{background:#123055;color:#e6eef6;border:1px solid #20406a;border-radius:10px;padding:9px 12px;cursor:pointer}
-.muted{color:var(--muted)}
+.search input{flex:1;background:#0d1722;color:#fff;border:1px solid #1d2a36;border-radius:10px;padding:8px}
+.btn{background:#123055;color:#fff;border:1px solid #20406a;border-radius:10px;padding:8px 12px;cursor:pointer}
+.muted{color:#93a3b8}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="hero">
-    <h1>🌑 LAST ASYLUM: PLAGUE #390 — DARK | IMPERIUM</h1>
-    <div class="sub">HTML-парсер · <span id="interval">—</span> · <span id="now">—</span></div>
-    <div class="grid">
-      <div class="pill"><span class="muted">Игроков</span><b id="total">—</b></div>
-      <div class="pill"><span class="muted">DARK</span><b id="dark">—</b></div>
-      <div class="pill"><span class="muted">Топ</span><b id="topcount">—</b></div>
-      <div class="pill"><span class="muted">Авто</span><b id="auto">—</b></div>
-    </div>
-  </div>
+<div class="hero"><h1>DARK #390 — Last Asylum</h1>
+<div class="muted"><span id="interval">...</span> | <span id="now">...</span></div>
+<div class="grid">
+<div class="pill"><span class="muted">Players</span><b id="total">...</b></div>
+<div class="pill"><span class="muted">DARK</span><b id="dark">...</b></div>
+<div class="pill"><span class="muted">Top</span><b id="topcount">...</b></div>
+<div class="pill"><span class="muted">Auto</span><b id="auto">...</b></div>
+</div></div>
 
-  <div class="search">
-    <input id="q" placeholder="🔎 Поиск по нику (2+ буквы)"/>
-    <button class="btn" onclick="doSearch()">Найти</button>
-  </div>
-  <div id="searchRes" class="card" style="display:none"></div>
-
-  <div class="tabs">
-    <div class="tab active" data-t="roster" onclick="switchTab('roster')">🏰 Ростер DARK</div>
-    <div class="tab" data-t="top" onclick="switchTab('top')">🏆 Топ #390</div>
-    <div class="tab" data-t="transfers" onclick="switchTab('transfers')">🔄 Переходы</div>
-    <div class="tab" data-t="new" onclick="switchTab('new')">🆕 Новые</div>
-  </div>
-
-  <div id="content" class="card">Загрузка…</div>
-  <div class="muted" style="margin-top:8px;font-size:11px">Данные: lastasylum.gg (HTML) · <span id="src">—</span> · <span id="last">—</span></div>
+<div class="search"><input id="q" placeholder="Поиск 2+ буквы"><button class="btn" onclick="doSearch()">Найти</button></div>
+<div id="searchRes" class="card" style="display:none"></div>
+<div class="tabs">
+<div class="tab active" data-t="roster" onclick="switchTab('roster')">Ростер DARK</div>
+<div class="tab" data-t="top" onclick="switchTab('top')">Топ #390</div>
+<div class="tab" data-t="transfers" onclick="switchTab('transfers')">Переходы</div>
+<div class="tab" data-t="new" onclick="switchTab('new')">Новые</div>
+</div>
+<div id="content" class="card">Загрузка...</div>
+<div class="muted" style="margin-top:8px;font-size:11px"><span id="src">...</span> | <span id="last">...</span></div>
 </div>
 
 <script>
-const API = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_87d33343";
-const SEARCH_API = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_cf51413c";
+const API='https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_87d33343';
+const SAPI='https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_cf51413c';
 let DATA=null;
-
-function fmtPower(n){
-  try{
-    n=parseInt(n);
-    if(n>=1000000) return (n/1000000).toFixed(1).replace('.0','')+'M';
-    if(n>=1000) return (n/1000).toFixed(1).replace('.0','')+'K';
-    return String(n);
-  }catch(e){return String(n)}
-}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
-
 async function load(){
-  try{
-    let tg=window.Telegram && window.Telegram.WebApp; if(tg){tg.ready();tg.expand();}
-    let r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'all'})});
-    let j=await r.json().catch(()=>({ok:false}));
-    let d=(j&&j.ok)?j:(j&&j.data?j.data:j);
-    DATA=d;
-    document.getElementById('interval').textContent=(d.interval?(d.interval/60)+'м':'—');
-    document.getElementById('now').textContent=d.fmt_now||'—';
-    document.getElementById('total').textContent=d.total_players??'—';
-    document.getElementById('dark').textContent=d.dark_active??(d.dark?d.dark.length:'—');
-    document.getElementById('topcount').textContent=d.top?d.top.length:'—';
-    document.getElementById('auto').textContent=(d.html_auto===true?'✅':'⏸');
-    document.getElementById('src').textContent=(d.last_success?d.last_success.source:'html');
-    document.getElementById('last').textContent=(d.last_success?(d.last_success.tag+' '+d.last_success.count+' чел.'):'—');
-    switchTab('roster');
-  }catch(e){document.getElementById('content').textContent='Ошибка: '+e;}
+ try{
+  let tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}
+  let r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+  let t=await r.text(); let j={}; try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,80))}
+  let d=j.result||j.data||j; if(d&&d.error) throw new Error(d.error);
+  DATA=d;
+  document.getElementById('interval').textContent=(d.interval?(d.interval/60)+'м':'-');
+  document.getElementById('now').textContent=d.fmt_now||'';
+  document.getElementById('total').textContent=d.total_players??'-';
+  document.getElementById('dark').textContent=d.dark_active??(d.dark?d.dark.length:'0');
+  document.getElementById('topcount').textContent=d.top?d.top.length:'0';
+  document.getElementById('auto').textContent=(d.html_auto===true?'ON':'OFF');
+  document.getElementById('src').textContent=(d.last_success?d.last_success.source:'html');
+  document.getElementById('last').textContent=(d.last_success?(d.last_success.tag+' '+d.last_success.count):'');
+  switchTab('roster');
+ }catch(e){document.getElementById('content').innerHTML='<span style="color:#fb7185">Error '+esc(String(e))+'</span>';}
 }
-
 function switchTab(t){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.t===t));
-  let c=document.getElementById('content');
-  if(!DATA){c.textContent='Загрузка…';return;}
-  if(t==='roster'){
-    let h=''; let dark=DATA.dark||[];
-    if(dark.length===0) h='<div class="muted">Пусто — /sync_html_once 67172519</div>';
-    else dark.slice(0,80).forEach((p,i)=>{
-      let rm=p.rank==4?'🔴':p.rank==3?'🟠':p.rank==2?'🟡':p.rank==5?'👑':'▫️';
-      h+='<div class="row"><div><span class="muted">'+String(i+1).padStart(2,' ')+'.</span> <b>'+esc(p.nick)+'</b> <span class="badge">R'+esc(p.rank||'—')+'</span></div><div style="text-align:right"><b>'+fmtPower(p.power||0)+'</b><br><span class="muted">K'+esc(p.kills||'—')+' · C'+esc(p.castle||'—')+' '+esc(p.id)+'</span></div></div>';
-    });
-    c.innerHTML=h;
-  } else if(t==='top'){
-    let h=''; (DATA.top||[]).forEach((a,i)=>{
-      let med=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1)+'.';
-      h+='<div class="row"><div>'+med+' <b>'+esc(a.tag)+'</b> '+esc(a.name)+' <span class="muted">'+esc(a.id)+'</span></div><div><b>'+a.members+'</b> чел.</div></div>';
-    });
-    c.innerHTML=h||'<div class="muted">Нет данных</div>';
-  } else if(t==='transfers'){
-    let h=''; (DATA.transfers||[]).forEach(e=>{
-      h+='<div class="row"><div><b>'+esc(e.nick)+'</b> <span class="muted">'+esc(e.pid)+'</span></div><div style="text-align:right"><div class="muted">'+esc(e.fmt)+'</div><div>'+esc(e.from)+' → <b>'+esc(e.to)+'</b></div></div></div>';
-    });
-    c.innerHTML=h||'<div class="muted">Переходов за 7д нет ✨</div>';
-  } else if(t==='new'){
-    let h=''; (DATA.new_players||[]).forEach(e=>{
-      h+='<div class="row"><div><b>'+esc(e.nick)+'</b> <span class="muted">'+esc(e.pid)+'</span> → <b>'+esc(e.alliance)+'</b></div><div class="muted">'+esc(e.fmt)+'</div></div>';
-    });
-    c.innerHTML=h||'<div class="muted">Новых за 7д нет</div>';
-  }
+ document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x.dataset.t===t)});
+ let c=document.getElementById('content'); if(!DATA){c.textContent='Загрузка...';return;}
+ if(t==='roster'){
+  let h=''; let dark=DATA.dark||[]; if(dark.length===0) h='<div class="muted">Пусто</div>';
+  else dark.forEach(function(p,i){h+='<div class="row"><div><span class="muted">'+String(i+1)+'.</span> <b>'+esc(p.nick)+'</b> <span class="badge">R'+esc(p.rank||'-')+'</span></div><div style="text-align:right"><b>'+String(p.power||0)+'</b><br><span class="muted">'+esc(p.id)+'</span></div></div>';});
+  c.innerHTML=h;
+ } else if(t==='top'){
+  let h=''; (DATA.top||[]).forEach(function(a,i){h+='<div class="row"><div>'+String(i+1)+'. <b>'+esc(a.tag)+'</b> <span class="muted">'+esc(a.id)+'</span></div><div><b>'+a.members+'</b></div></div>';}); c.innerHTML=h||'Нет данных';
+ } else if(t==='transfers'){
+  let h=''; (DATA.transfers||[]).forEach(function(e){h+='<div class="row"><div><b>'+esc(e.nick)+'</b> <span class="muted">'+esc(e.pid)+'</span></div><div style="text-align:right"><div class="muted">'+esc(e.fmt)+'</div><div>'+esc(e.from)+' to <b>'+esc(e.to)+'</b></div></div></div>';}); c.innerHTML=h||'Нет переходов 7д';
+ } else if(t==='new'){
+  let h=''; (DATA.new_players||[]).forEach(function(e){h+='<div class="row"><div><b>'+esc(e.nick)+'</b> <span class="muted">'+esc(e.pid)+'</span> to <b>'+esc(e.alliance)+'</b></div><div class="muted">'+esc(e.fmt)+'</div></div>';}); c.innerHTML=h||'Нет новых 7д';
+ }
 }
-
 async function doSearch(){
-  let q=document.getElementById('q').value.trim();
-  if(q.length<2){alert('Введи 2+ букв');return;}
-  let box=document.getElementById('searchRes');
-  box.style.display='block'; box.textContent='Поиск…';
-  try{
-    let r=await fetch(SEARCH_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:q})});
-    let j=await r.json().catch(()=>({ok:false}));
-    let d=(j&&j.found)?j:(j&&j.data?j.data:j);
-    let arr=d.found||d.data||[];
-    if(!arr||arr.length===0) box.innerHTML='<div class="muted">'+esc(q)+' — не найдено</div>';
-    else{
-      let h='<b>Найдено '+arr.length+'</b>';
-      arr.slice(0,20).forEach(p=>{
-        h+='<div class="row"><div><b>'+esc(p.nick)+'</b> <span class="muted">'+esc(p.id)+'</span></div><div><b>'+esc(p.alliance)+'</b> '+fmtPower(p.power||0)+'</div></div>'
-      });
-      box.innerHTML=h;
-    }
-  }catch(e){box.textContent='Ошибка: '+e;}
+ let q=document.getElementById('q').value.trim(); if(q.length<2){alert('2+');return;}
+ let box=document.getElementById('searchRes'); box.style.display='block'; box.textContent='Поиск...';
+ try{
+  let r=await fetch(SAPI,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:q})});
+  let t=await r.text(); let j={}; try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,80))}
+  let d=j.result||j.data||j; let arr=d.found||[]; if(!arr||arr.length===0) box.innerHTML='<div class="muted">'+esc(q)+' не найдено</div>';
+  else{let h='<b>Найдено '+arr.length+'</b>'; arr.forEach(function(p){h+='<div class="row"><div><b>'+esc(p.nick)+'</b> <span class="muted">'+esc(p.id)+'</span></div><div><b>'+esc(p.alliance)+'</b></div></div>'}); box.innerHTML=h;}
+ }catch(e){box.innerHTML='Error '+esc(String(e));}
 }
-
 load();
 </script>
 </body>
