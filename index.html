@@ -1,351 +1,238 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#090c12">
-<title>DARK — IMPERIUM | Server 390</title>
+<meta name="theme-color" content="#080d17">
+<title>DARK | IMPERIUM #390</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{color-scheme:dark;--bg:#090c12;--panel:#10151f;--card:#141b27;--line:#263143;--text:#edf3ff;--muted:#8795ab;--blue:#62a8ff;--cyan:#54e1e6;--green:#4adea3;--red:#fb7185}
+:root{color-scheme:dark;--bg:#080d17;--panel:#101827;--line:#253248;--text:#edf4ff;--muted:#91a0b8;--blue:#3b82f6;--cyan:#38bdf8;--green:#34d399;--red:#fb7185;--gold:#fbbf24}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at 50% -15%,#18345a 0,transparent 48%),var(--bg);color:var(--text);font:14px/1.45 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input{font:inherit}
-button{cursor:pointer;touch-action:manipulation}
-button:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
-.app{max-width:1050px;margin:auto;padding:20px 20px 40px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+body{margin:0;background:radial-gradient(800px 400px at 50% -150px,#173b70 0%,transparent 70%),var(--bg);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer;color:inherit}
+.wrap{max-width:920px;margin:auto;padding:15px 13px 30px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:11px}
-.logo{width:43px;height:43px;border:1px solid #39639a;border-radius:14px;background:linear-gradient(145deg,#1e477c,#101d33);display:grid;place-items:center;font-weight:900;font-size:17px;letter-spacing:-1px;box-shadow:0 0 25px #2766aa20}
-.brand-name{font-size:16px;font-weight:850;letter-spacing:2px}
-.brand-sub{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:2px}
-.server{border:1px solid var(--line);background:#101723;border-radius:9px;padding:8px 11px;color:#b8c8df;font-size:12px;white-space:nowrap}
-.hero{position:relative;overflow:hidden;border:1px solid #2b4567;border-radius:22px;padding:25px;background:linear-gradient(115deg,#152b46,#111b2b 55%,#111725);box-shadow:0 16px 55px #0002}
-.hero:after{content:"390";position:absolute;right:14px;bottom:-43px;font-size:170px;font-weight:950;letter-spacing:-12px;color:#ffffff05;pointer-events:none}
-.hero-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;position:relative;z-index:1}
-.eyebrow{font-size:10px;font-weight:800;letter-spacing:2.4px;color:var(--cyan)}
-h1{font-size:clamp(27px,5vw,43px);letter-spacing:-1.7px;line-height:1.08;margin:10px 0 9px;font-weight:900}
-.hero p{color:#a9bbd3;margin:0;max-width:470px;line-height:1.6}
-.live{display:flex;align-items:center;gap:7px;color:#a7e8ca;font-size:11px;white-space:nowrap;border:1px solid #2d6a55;background:#10382c80;padding:7px 10px;border-radius:99px}
-.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px #4adea3}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:25px;position:relative;z-index:1}
-.stat{padding:14px;background:#0b1220a8;border:1px solid #31435b;border-radius:13px;min-width:0}
-.stat-label{font-size:11px;color:#9baec6;display:flex;align-items:center;gap:7px}
-.stat-icon{color:var(--blue);font-size:15px}
-.stat-value{font-size:clamp(22px,3vw,30px);font-weight:850;letter-spacing:-1px;margin-top:8px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
-.stat-foot{font-size:10px;color:#72839a;margin-top:3px}
-.toolbar{display:flex;gap:10px;margin:22px 0 14px}
-.searchbox{flex:1;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:0 14px;min-width:0}
-.search-icon{font-size:18px;color:var(--muted)}
-.searchbox input{background:transparent;border:0;outline:none;color:var(--text);width:100%;min-width:0;padding:13px 0}
-.searchbox input::placeholder{color:#69788e}
-.btn{border:1px solid #315b8b;border-radius:12px;padding:11px 15px;background:linear-gradient(135deg,#23528b,#17365f);color:#fff;font-weight:700;white-space:nowrap}
-.btn:hover{filter:brightness(1.14)}
-.btn:disabled{opacity:.6}
-.btn-quiet{background:#131b28;border-color:var(--line);color:#c8d5e8}
-.tabs{display:flex;gap:7px;padding:5px;background:#0e131d;border:1px solid #1c2635;border-radius:14px;margin-bottom:16px;overflow-x:auto}
-.tab{flex:1;min-width:max-content;border:0;border-radius:10px;padding:11px 13px;background:transparent;color:#8290a5;font-size:12px;font-weight:750}
-.tab.active{background:linear-gradient(135deg,#203d60,#172a43);color:#eff6ff;box-shadow:inset 0 0 0 1px #34577f}
-.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:23px 0 13px}
-.section-title{font-size:18px;font-weight:850;letter-spacing:-.4px}
-.section-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.count{color:#b8d8ff;border:1px solid #29476b;background:#14253a;padding:5px 9px;border-radius:8px;font-size:11px;font-weight:800}
-.list{display:grid;gap:8px}
-.player{display:flex;align-items:center;gap:13px;background:linear-gradient(110deg,#141b27,#111722);border:1px solid #202c3c;border-radius:15px;padding:13px;transition:border-color .15s,transform .15s;min-width:0}
-.player[data-player]{cursor:pointer}
-.player[data-player]:hover{border-color:#3b5b83;transform:translateY(-1px)}
-.position{width:30px;flex-shrink:0;color:#697b95;font-size:12px;font-weight:800;text-align:center}
-.avatar{width:43px;height:43px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#213d61,#152337);border:1px solid #304a6a;color:#b8d9ff;font-weight:900;font-size:14px}
-.player-info{flex:1;min-width:0}
-.player-name{font-size:14px;font-weight:800;overflow-wrap:anywhere}
-.player-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px;font-size:11px;color:var(--muted)}
-.tag{padding:3px 7px;border-radius:6px;background:#1a2636;border:1px solid #2a394e;color:#b4c6df;font-size:10px;font-weight:750}
-.power{text-align:right;min-width:80px}
-.power strong{font-size:14px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
-.power span{display:block;color:#78889f;font-size:10px;margin-top:3px}
-.rank-medal{font-size:20px;width:30px;text-align:center;flex-shrink:0}
-.alliance-mark{height:38px;width:43px;display:grid;place-items:center;border-radius:10px;background:#172438;border:1px solid #2a405c;font-size:11px;font-weight:900;color:#b9d7ff;flex-shrink:0}
-.transfer{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px;font-size:11px;color:#9baec5}
-.from{color:#f7a5b4}.to{color:#83e8bf}.arrow{color:#687f9d}
-.date{font-size:11px;color:#8493a8;text-align:right;white-space:nowrap}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
-.empty{text-align:center;padding:38px 15px;color:var(--muted)}
-.empty-icon{font-size:28px;margin-bottom:10px}
-.error{border:1px solid #653243;background:#281620;border-radius:12px;padding:14px;color:#ffb6c4;overflow-wrap:anywhere}
-.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:17px;color:#627187;font-size:10px}
-.modal{position:fixed;inset:0;z-index:10;background:#03060bd9;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:14px}
-.modal.open{display:flex}
-.sheet{width:100%;max-width:680px;max-height:90vh;overflow:auto;background:#0e141e;border:1px solid #2a3b51;border-radius:21px;padding:21px;box-shadow:0 25px 90px #0009}
-.profile-head{display:flex;align-items:flex-start;gap:12px}
-.profile-head .avatar{width:55px;height:55px;font-size:18px}
-.profile-name{font-size:21px;font-weight:900;overflow-wrap:anywhere}
-.profile-id{font-size:11px;color:var(--muted);margin-top:5px}
-.profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:20px 0}
-.profile-stat{border:1px solid var(--line);background:#131b27;border-radius:13px;padding:13px;min-width:0}
-.profile-stat span{display:block;font-size:11px;color:var(--muted)}
-.profile-stat strong{display:block;font-size:20px;margin-top:6px;overflow-wrap:anywhere}
-.history-title{font-weight:800;font-size:13px;margin:19px 0 8px}
-.history-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #202b3a}
-.history-row:last-child{border-bottom:0}
-.history-value{overflow-wrap:anywhere}
-.history-time{font-size:11px;color:var(--muted);text-align:right;flex-shrink:0}
-.close{margin-left:auto}
-@media(max-width:600px){
- .app{padding:13px 12px 30px}
- .topbar{margin-bottom:15px}
- .hero{padding:19px 15px;border-radius:18px}
- .hero:after{font-size:115px;bottom:-20px;right:4px}
- h1{letter-spacing:-1px}
- .hero p{font-size:12px}
- .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:19px}
- .stat{padding:11px}
- .stat-value{font-size:25px}
- .toolbar{gap:7px}
- .btn{padding:10px 11px}
- .tabs{margin-bottom:13px}
- .tab{padding:10px 12px}
- .player{gap:9px;padding:11px 9px;border-radius:13px}
- .position{width:20px;font-size:11px}
- .avatar{width:37px;height:37px;border-radius:11px}
- .player-name{font-size:13px}
- .power{min-width:65px}
- .power strong{font-size:12px}
- .alliance-mark{width:36px;height:36px}
- .date{font-size:10px;white-space:normal}
- .sheet{padding:16px;border-radius:18px}
+.logo{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#2875ff,#102d57);font-weight:900;font-size:21px;box-shadow:0 8px 25px #2875ff30}
+.brandname{font-size:15px;font-weight:900;letter-spacing:1px}
+.sub{color:var(--muted);font-size:10px;margin-top:3px}
+.server{border:1px solid var(--line);background:#111a2a;border-radius:11px;padding:8px 10px;font-size:11px;white-space:nowrap}
+.hero{padding:23px;border:1px solid #315b9b66;border-radius:22px;background:linear-gradient(120deg,#142e53,#101a2b 75%);margin-bottom:12px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:200px;height:200px;right:-90px;top:-110px;border-radius:50%;background:#2875ff24}
+.eyebrow{color:#83c7ff;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(25px,5vw,35px);line-height:1.1;letter-spacing:-1px;margin:10px 0}
+.hero p{margin:0;color:#b8c8df;max-width:520px;font-size:13px}
+.herobottom{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:19px}
+.status{color:#9cebc8;font-size:11px}.status:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 8px #34d39980}
+.btn{border:1px solid #416ca8;background:#17345c;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:750}
+.btn:disabled{opacity:.55}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:21px}
+.stat{padding:13px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#121d2d,#0d1421);min-width:0}
+.statlabel{font-size:11px;color:var(--muted)}
+.statvalue{font-size:clamp(18px,3.6vw,25px);font-weight:850;letter-spacing:-.5px;margin-top:7px;overflow-wrap:anywhere}
+.statnote{font-size:10px;color:#7789a4;margin-top:4px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:19px 2px 11px}
+.sectionhead h2{font-size:16px;margin:0}.count{font-size:11px;color:var(--muted)}
+.searchrow{display:flex;gap:8px;margin-bottom:12px}
+.search{flex:1;min-width:0;position:relative}
+.search span{position:absolute;left:13px;top:10px;font-size:18px;color:#7e90aa}
+.search input{width:100%;background:#0e1624;border:1px solid var(--line);border-radius:12px;padding:12px 12px 12px 37px;color:var(--text);outline:none}
+.search input:focus{border-color:#3b82f6}
+.search input::placeholder{color:#71819a}
+.clear{border:1px solid var(--line);background:#121d2e;border-radius:12px;padding:0 12px;font-size:11px}
+.tabs{display:flex;gap:5px;overflow-x:auto;margin:0 0 12px;padding:2px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid transparent;background:none;color:#91a0b8;padding:9px 11px;border-radius:10px;font-size:11px;font-weight:750}
+.tab.active{background:#17325a;border-color:#2b5c9a;color:#e1efff}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(110deg,#111b2b,#0e1522);min-width:0;cursor:pointer}
+.item:hover{border-color:#3b5b85}
+.avatar{width:41px;height:41px;flex:0 0 41px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,#203b60,#172438);border:1px solid #3d5b83;color:#dbeafe;font-weight:850}
+.avatar.a{background:linear-gradient(145deg,#164e63,#172b3d);color:#a5f3fc}
+.main{flex:1;min-width:0}
+.name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.desc{font-size:10px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.right{text-align:right;flex:0 0 auto}
+.power{font-weight:850;font-variant-numeric:tabular-nums}
+.meta{font-size:10px;color:var(--muted);margin-top:4px}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:7px;padding:4px 7px;font-size:10px;color:#c3d4e9;background:#121d2c}
+.pill.blue{color:#9ac8ff;border-color:#2b5288;background:#112748}
+.pill.gold{color:#ffe2a0;border-color:#715824;background:#2c2514}
+.empty,.loading{padding:27px 14px;text-align:center;color:var(--muted);border:1px dashed #2a3a51;border-radius:15px;background:#0d1420}
+.empty strong{display:block;color:#e0eafa;margin-bottom:5px}
+.error{padding:11px;margin:12px 0;background:#2a151d;border:1px solid #713543;border-radius:11px;color:#ffc1ca;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:20px;color:#687993;font-size:10px}
+.overlay{display:none;position:fixed;inset:0;z-index:10;background:#02050bdd;padding:12px;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{width:min(600px,100%);max-height:88vh;overflow:auto;border:1px solid #2b3e59;border-radius:20px;background:#0d1523}
+.modalhead{display:flex;justify-content:space-between;gap:12px;padding:17px;border-bottom:1px solid var(--line)}
+.modalhead h2{margin:0;font-size:19px}.modalhead p{margin:5px 0 0;color:var(--muted);font-size:11px}
+.close{width:34px;height:34px;border:1px solid var(--line);background:#172235;border-radius:10px;font-size:20px}
+.modalbody{padding:16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.detail{padding:12px;border:1px solid var(--line);border-radius:12px;background:#111b2b;min-width:0}
+.dlabel{font-size:10px;color:var(--muted)}.dvalue{font-size:15px;font-weight:800;margin-top:5px;overflow-wrap:anywhere}
+.mtitle{font-weight:800;margin:18px 0 8px}
+.history{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}
+.history span:last-child{color:var(--muted);text-align:right}
+@media(max-width:520px){
+ .wrap{padding:11px 10px 24px}.hero{padding:19px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:12px}.server{font-size:10px;padding:7px}.brandname{font-size:13px}.item{padding:10px;gap:8px}.avatar{width:37px;height:37px;flex-basis:37px}.name{font-size:12px}.desc{font-size:10px}.power{font-size:12px}.meta{font-size:9px}
 }
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="app">
-<header class="topbar">
- <div class="brand">
-  <div class="logo">D.</div>
-  <div><div class="brand-name">IMPERIUM</div><div class="brand-sub">ALLIANCE INTELLIGENCE</div></div>
- </div>
- <div class="server">◈ &nbsp; SERVER #390</div>
+<div class="wrap">
+<header class="top">
+ <div class="brand"><div class="logo">D</div><div><div class="brandname">DARK <span style="color:#60a5fa">|</span> IMPERIUM</div><div class="sub">ЦЕНТР УПРАВЛЕНИЯ АЛЬЯНСОМ</div></div></div>
+ <div class="server">🌐 Сервер <b>#390</b></div>
 </header>
-
 <section class="hero">
- <div class="hero-top">
-  <div>
-   <div class="eyebrow">DARK / COMMAND CENTER</div>
-   <h1>Know your server.<br>Control the game.</h1>
-   <p>Аналитика альянса, история игроков и контроль перемещений на сервере.</p>
-  </div>
-  <div class="live"><span class="dot"></span><span id="status">CONNECTING</span></div>
- </div>
- <div class="stats">
-  <div class="stat"><div class="stat-label"><span class="stat-icon">◉</span> Игроки в базе</div><div class="stat-value" id="total">—</div><div class="stat-foot">Отслеживаемые ID</div></div>
-  <div class="stat"><div class="stat-label"><span class="stat-icon">◆</span> DARK</div><div class="stat-value" id="dark">—</div><div class="stat-foot">Состав альянса</div></div>
-  <div class="stat"><div class="stat-label"><span class="stat-icon">↗</span> Альянсы</div><div class="stat-value" id="topcount">—</div><div class="stat-foot">В рейтинге</div></div>
-  <div class="stat"><div class="stat-label"><span class="stat-icon">⌁</span> HTML sync</div><div class="stat-value" id="auto">—</div><div class="stat-foot">Автосинхронизация</div></div>
- </div>
+ <div class="eyebrow">Alliance intelligence</div>
+ <h1>Сила — в порядке.</h1>
+ <p>Состав, переходы игроков и изменения альянсов в одном месте.</p>
+ <div class="herobottom"><div class="status" id="status">Подключение к базе…</div><button class="btn" id="refresh">↻ Обновить данные</button></div>
 </section>
-
-<div class="toolbar">
- <label class="searchbox"><span class="search-icon">⌕</span><input id="q" type="search" placeholder="Ник, старый ник или ID…" autocomplete="off"></label>
- <button class="btn" id="searchBtn">Найти</button>
- <button class="btn btn-quiet" id="refresh" title="Обновить данные">↻</button>
-</div>
-<div id="searchRes" class="card" hidden style="margin-bottom:15px"></div>
-
-<nav class="tabs">
- <button class="tab active" data-tab="roster">◈ Состав DARK</button>
- <button class="tab" data-tab="top">♛ Рейтинг</button>
- <button class="tab" data-tab="transfers">⇄ Переходы</button>
- <button class="tab" data-tab="new">✦ Новички</button>
+<section class="stats">
+ <div class="stat"><div class="statlabel">Участники DARK</div><div class="statvalue" id="members">—</div><div class="statnote">Текущий состав</div></div>
+ <div class="stat"><div class="statlabel">Общая мощь</div><div class="statvalue" id="power">—</div><div class="statnote">По последним данным</div></div>
+ <div class="stat"><div class="statlabel">Убийства</div><div class="statvalue" id="kills">—</div><div class="statnote">Статистика альянса</div></div>
+ <div class="stat"><div class="statlabel">Обновление</div><div class="statvalue" id="updated" style="font-size:16px">—</div><div class="statnote">Время данных</div></div>
+</section>
+<div id="error" class="error" hidden></div>
+<div class="sectionhead"><h2>База сервера</h2><span class="count" id="count">0 записей</span></div>
+<div class="searchrow"><div class="search"><span>⌕</span><input id="query" placeholder="Ник игрока, альянс или ID…" autocomplete="off"></div><button class="clear" id="clear">Сбросить</button></div>
+<nav class="tabs" id="tabs">
+ <button class="tab active" data-tab="roster">Состав DARK</button>
+ <button class="tab" data-tab="players">Все игроки</button>
+ <button class="tab" data-tab="alliances">Альянсы</button>
+ <button class="tab" data-tab="transfers">Переходы</button>
+ <button class="tab" data-tab="new">Новые игроки</button>
 </nav>
-
-<main id="content"><div class="card empty">Загружаем данные сервера…</div></main>
-
-<footer class="footer"><span id="src">Источник: —</span><span id="last">Обновление: —</span></footer>
+<main id="content"><div class="loading">Загружаем данные…</div></main>
+<footer class="footer"><span>DARK | IMPERIUM · SERVER #390</span><span id="footnote">Панель мониторинга</span></footer>
 </div>
-
-<div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Профиль игрока">
- <div class="sheet" id="sheet"></div>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+ <div class="modal"><div class="modalhead"><div><h2 id="modalTitle">Профиль</h2><p id="modalSub"></p></div><button class="close" id="close">×</button></div><div class="modalbody" id="modalBody"></div></div>
 </div>
-
 <script>
+(function(){
 'use strict';
 
+/* Вставлены адреса webhook из предыдущего кода пользователя. */
 const API='https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN80tl_7pwh6PhlXOGsO6fJ82jA4vgoGJco-AfNJfk1XZEY57hhZpLaO5P-3QGoGwuUPcWmqZ9TIsz_eWBNoKRPG2QNrZp4tUzsxykjxufs6I01CsXM4728aYGD50ldJDuaQ44seiDtLgnp1E3_HHL_2wXYxme7SvdYNO2eWRL2yyXDRDVkReGCPdK78KnATjI6';
 const SAPI='https://api.telebotcreator.com/new-webhook?data=gAAAAABq2fN8b1BNTKFw2OuefuWVwEe3DP7RJq_9FLN0VP5Egu7iZlyQzDrtPhRBKxety4eG93eHZWOYpX41Tfc_FtfFrUZoUQQoOxnEilzVBSMkG0BNXzWfZ6bE3aH3pnedNUXLEnX6cjI-aRvybwa3HEjbDBFFnS2Qg-HkNaVl7HzPOmW3g16UFv1bOuXcBfVM61w8k7z-';
 
 const $=id=>document.getElementById(id);
-let DATA=null,activeTab='roster',loading=false,searchLoading=false,loadAgain=false,loadController=null;
+const state={tab:'roster',query:'',players:[],alliances:[],transfers:[],newPlayers:[],dashboard:null,loading:false,errors:[]};
+try{window.Telegram?.WebApp?.ready();window.Telegram?.WebApp?.expand();}catch(e){}
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function val(v){return v===null||v===undefined||v===''?'—':esc(v);}
-function number(v){if(v===null||v===undefined||v==='')return '—';let n=Number(v);return Number.isFinite(n)?n.toLocaleString('ru-RU'):esc(v);}
-function initials(n){let s=String(n||'?').trim();return esc((s.slice(0,2)||'?').toUpperCase());}
-function unwrap(j){let d=j;for(let i=0;i<3&&d&&d.result!==undefined;i++)d=d.result;if(!d||typeof d!=='object')throw Error('Некорректный ответ API');if(d.error)throw Error(String(d.error));return d;}
-
+function first(o,keys,fallback=''){for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=='')return o[k];return fallback;}
+function unwrap(d){for(let i=0;i<3;i++){if(d&&typeof d==='object'&&!Array.isArray(d)){if(d.data!==undefined&&Object.keys(d).length<=4){d=d.data;continue;}if(d.result!==undefined&&Object.keys(d).length<=4){d=d.result;continue;}}break;}return d;}
+function list(d,keys=[]){if(Array.isArray(d))return d;if(!d||typeof d!=='object')return[];for(const k of keys)if(Array.isArray(d[k]))return d[k];for(const k of ['items','rows','results','data','players','alliances','members','transfers','history','changes'])if(Array.isArray(d[k]))return d[k];return[];}
 async function request(url,options={}){
- const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+ const {signal:externalSignal,...opts}=options,controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),18000);
+ const abort=()=>controller.abort();
+ if(externalSignal){if(externalSignal.aborted)abort();else externalSignal.addEventListener('abort',abort,{once:true});}
  try{
-  const r=await fetch(url,{...options,signal:controller.signal,headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{}),...options.headers}});
-  const raw=await r.text();let j;
-  try{j=JSON.parse(raw);}catch{throw Error('API вернул не JSON (HTTP '+r.status+'): '+raw.slice(0,120));}
-  if(!r.ok)throw Error('HTTP '+r.status+': '+(j.message||j.error||'Ошибка запроса'));
-  return unwrap(j);
- }catch(e){
-  if(e.name==='AbortError')throw Error('Превышено время ожидания API');
-  if(e instanceof TypeError)throw Error('Ошибка сети/CORS. Проверь настройки TBC API.');
-  throw e;
- }finally{clearTimeout(timer);}
+  const r=await fetch(url,{...opts,signal:controller.signal,headers:{Accept:'application/json',...(opts.headers||{})}});
+  const raw=await r.text();let data;
+  try{data=raw?JSON.parse(raw):{};}catch(e){data={message:raw.slice(0,250)};}
+  if(!r.ok)throw Error('HTTP '+r.status+(data.message?': '+data.message:''));
+  if(data&&data.ok===false)throw Error(data.message||data.error||'API вернул ошибку');
+  return unwrap(data);
+ }catch(e){if(e.name==='AbortError')throw Error(externalSignal?.aborted?'Запрос отменён':'API не ответил за 18 секунд');throw e;}
+ finally{clearTimeout(timeout);if(externalSignal)externalSignal.removeEventListener('abort',abort);}
 }
-
-function sectionHead(title,sub,count){
- return '<div class="section-head"><div><div class="section-title">'+title+'</div><div class="section-sub">'+sub+'</div></div><span class="count">'+count+'</span></div>';
+function post(url,data){return request(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+function n(v){if(v===null||v===undefined||v==='')return null;const x=Number(String(v).replace(/[,\s]/g,''));return Number.isFinite(x)?x:null;}
+function fmt(v){const x=n(v);return x===null?(v===0?'0':'—'):new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(x);}
+function compact(v){const x=n(v);if(x===null)return'—';if(Math.abs(x)>=1e9)return(x/1e9).toLocaleString('ru-RU',{maximumFractionDigits:2})+' млрд';if(Math.abs(x)>=1e6)return(x/1e6).toLocaleString('ru-RU',{maximumFractionDigits:2})+' млн';if(Math.abs(x)>=1e3)return(x/1e3).toLocaleString('ru-RU',{maximumFractionDigits:1})+' тыс.';return fmt(x);}
+function date(v){if(v===null||v===undefined||v==='')return'—';let d;if(typeof v==='number'||/^\d{10,13}$/.test(String(v))){let x=Number(v);if(String(Math.trunc(x)).length===10)x*=1000;d=new Date(x);}else d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
+function pname(p){return String(first(p,['nickname','name','player_name','playerName','username'],'Без имени'));}
+function pid(p){return String(first(p,['id','player_id','playerId','uid'],'')??'');}
+function alliance(p){return String(first(p,['alliance','alliance_tag','allianceTag','tag','alliance_name','allianceName'],'Без альянса'));}
+function ppower(p){return first(p,['power','total_power','totalPower','combat_power','might','strength'],null);}
+function initial(s){return String(s||'?').trim().slice(0,2).toUpperCase();}
+function player(p){return{...p,_name:pname(p),_id:pid(p),_alliance:alliance(p),_power:ppower(p)};}
+function ally(a){return{...a,_tag:String(first(a,['tag','alliance_tag'],'—')),_name:String(first(a,['name','alliance_name'],'Без названия')),_id:String(first(a,['id','alliance_id'],'')??''),_members:first(a,['members','member_count','memberCount','members_count'],null),_power:first(a,['power','total_power','totalPower'],null),_kills:first(a,['kills','total_kills','totalKills'],null)};}
+function showError(msg){$('error').hidden=!msg;$('error').textContent=msg||'';}
+function tabList(){if(state.tab==='roster')return state.players.filter(p=>p._alliance.toUpperCase()==='DARK'||p._alliance.toUpperCase().includes('IMPERIUM'));if(state.tab==='alliances')return state.alliances;if(state.tab==='transfers')return state.transfers;if(state.tab==='new')return state.newPlayers;return state.players;}
+function filtered(items){const q=state.query.trim().toLowerCase();if(!q)return items;return items.filter(x=>[pname(x),pid(x),alliance(x),first(x,['tag','name','old_nickname','oldNickname','new_nickname','newNickname','from_alliance','to_alliance'],'')].join(' ').toLowerCase().includes(q));}
+function updateStats(){
+ const dark=state.players.filter(p=>p._alliance.toUpperCase()==='DARK'||p._alliance.toUpperCase().includes('IMPERIUM'));
+ const a=state.alliances.map(ally).find(x=>x._tag.toUpperCase()==='DARK'||x._name.toUpperCase().includes('IMPERIUM'));
+ const d=state.dashboard||{};
+ $('members').textContent=fmt(first(d,['members','member_count','memberCount'],a?a._members:dark.length));
+ $('power').textContent=compact(first(d,['power','total_power','totalPower'],a?a._power:dark.reduce((s,p)=>s+(n(p._power)||0),0)));
+ $('kills').textContent=compact(first(d,['kills','total_kills','totalKills'],a?a._kills:null));
+ const stamp=first(d,['asOf','updated_at','updatedAt','timestamp'],null);
+ $('updated').textContent=stamp?date(stamp):'—';$('footnote').textContent=stamp?'Данные: '+date(stamp):'DARK | IMPERIUM · #390';
 }
-function empty(msg){return '<div class="card empty"><div class="empty-icon">◇</div>'+esc(msg)+'</div>';}
-function playerRow(p,i,mode='roster'){
- const id=p.id??p.pid;
- const nick=p.nick||p.nickname||'Unknown';
- const power=p.power;
- let meta='',side='',lead='';
- if(mode==='roster'){
-  lead='<div class="position">'+String(i+1).padStart(2,'0')+'</div>';
-  meta='<span class="tag">R'+val(p.rank)+'</span><span>ID '+val(id)+'</span>';
-  side='<div class="power"><strong>'+number(power)+'</strong><span>POWER</span></div>';
- }else if(mode==='search'){
-  meta='<span class="tag">'+val(p.alliance)+'</span><span>ID '+val(id)+'</span>';
-  side='<div class="power"><strong>'+number(power)+'</strong><span>POWER</span></div>';
- }else if(mode==='new'){
-  meta='<span class="tag">'+val(p.alliance)+'</span><span>Новый игрок</span>';
-  side='<div class="date">'+val(p.fmt)+'</div>';
- }else if(mode==='transfer'){
-  meta='<span class="tag">Переход</span><span>ID '+val(id)+'</span>';
-  side='<div class="date">'+val(p.fmt)+'<div class="transfer"><span class="from">'+val(p.from)+'</span><span class="arrow">→</span><span class="to">'+val(p.to)+'</span></div></div>';
- }
- return '<article class="player" data-player="'+esc(id)+'">'+lead+
-  '<div class="avatar">'+initials(nick)+'</div><div class="player-info"><div class="player-name">'+esc(nick)+'</div><div class="player-meta">'+meta+'</div></div>'+side+'</article>';
+function renderPlayer(p){return `<article class="item" data-player="${esc(pid(p))}" data-name="${esc(pname(p))}"><div class="avatar">${esc(initial(pname(p)))}</div><div class="main"><div class="name">${esc(pname(p))}</div><div class="desc">${esc(alliance(p))} · ID ${esc(pid(p)||'—')}</div></div><div class="right"><div class="power">${esc(compact(ppower(p)))}</div><div class="meta">Сервер ${esc(first(p,['server','server_id','serverId'],390))}</div></div></article>`;}
+function renderAlly(raw){const a=ally(raw);return `<article class="item" data-alliance="${esc(a._id)}" data-tag="${esc(a._tag)}"><div class="avatar a">${esc(initial(a._tag))}</div><div class="main"><div class="name">${esc(a._tag)} <span style="color:#a7b8d0;font-weight:500">· ${esc(a._name)}</span></div><div class="desc">ID ${esc(a._id||'—')}</div></div><div class="right"><div class="power">${esc(compact(a._power))}</div><div class="meta">${esc(fmt(a._members))} участников</div></div></article>`;}
+function renderChange(x){const old=first(x,['old_nickname','oldNickname'],''),neu=first(x,['new_nickname','newNickname'],''),isNick=!!(old||neu||x.type==='nickname_change');const who=first(x,['nickname','player_name','playerName','name'],'Игрок'),from=first(x,['from_alliance','fromAlliance','old_alliance','oldAlliance'],'—'),to=first(x,['to_alliance','toAlliance','new_alliance','newAlliance'],'—'),when=first(x,['time','timestamp','created_at','createdAt','date'],null);return `<article class="item" data-player="${esc(first(x,['player_id','playerId','id'],''))}" data-name="${esc(who)}"><div class="avatar">${isNick?'✎':'⇄'}</div><div class="main"><div class="name">${esc(isNick?(old||who)+' → '+(neu||who):who)}</div><div class="desc">${isNick?'Смена ника':esc(from)+' → '+esc(to)}</div></div><div class="right"><span class="pill ${isNick?'blue':'gold'}">${esc(date(when))}</span></div></article>`;}
+function render(){
+ updateStats();const items=filtered(tabList());
+ $('count').textContent=fmt(items.length)+' записей';
+ if(state.loading&&!state.players.length&&!state.alliances.length){$('content').innerHTML='<div class="loading">Загружаем данные…</div>';return;}
+ if(!items.length){$('content').innerHTML=`<div class="empty"><strong>${state.query?'Ничего не найдено':'Нет данных в этом разделе'}</strong>${state.query?'Попробуй другой запрос.':'Проверь подключение API или обнови данные позже.'}</div>`;return;}
+ $('content').innerHTML='<div class="list">'+items.map(x=>state.tab==='alliances'?renderAlly(x):(state.tab==='transfers'||state.tab==='new')?renderChange(x):renderPlayer(x)).join('')+'</div>';
 }
-
-function renderTab(tab){
- activeTab=tab;
- document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
- if(!DATA){$('content').innerHTML=empty('Нет загруженных данных');return;}
- let html='';
- if(tab==='roster'){
-  const a=DATA.dark||[];
-  html=sectionHead('Состав DARK','Игроки альянса · нажми на игрока для подробностей',a.length);
-  html+='<div class="list">'+(a.length?a.map((p,i)=>playerRow(p,i)).join(''):empty('Список участников пуст'))+'</div>';
- }
- if(tab==='top'){
-  const a=DATA.top||[];
-  html=sectionHead('Рейтинг сервера','Альянсы · текущие данные базы',a.length);
-  html+='<div class="list">'+a.map((p,i)=>{
-   const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1).padStart(2,'0');
-   return '<article class="player"><div class="rank-medal">'+medal+'</div><div class="alliance-mark">'+esc(p.tag||'—')+'</div><div class="player-info"><div class="player-name">'+esc(p.name||p.tag||'Unknown')+'</div><div class="player-meta"><span>ID '+val(p.id)+'</span></div></div><div class="power"><strong>'+number(p.members)+'</strong><span>MEMBERS</span></div></article>';
-  }).join('')+'</div>';
-  if(!a.length)html+=empty('Рейтинг пока недоступен');
- }
- if(tab==='transfers'){
-  const a=DATA.transfers||[];
-  html=sectionHead('История переходов','Смена альянсов за последние 7 дней',a.length);
-  html+='<div class="list">'+(a.length?a.map((p,i)=>playerRow(p,i,'transfer')).join(''):empty('За последние 7 дней переходов нет'))+'</div>';
- }
- if(tab==='new'){
-  const a=DATA.new_players||[];
-  html=sectionHead('Новые игроки','Обнаружены за последние 7 дней',a.length);
-  html+='<div class="list">'+(a.length?a.map((p,i)=>playerRow(p,i,'new')).join(''):empty('Новых игроков нет'))+'</div>';
- }
- $('content').innerHTML=html;
-}
-
+function payload(raw,key){const d=unwrap(raw);if(key==='players')return list(d,['players','members','items','rows']);if(key==='alliances')return list(d,['alliances','items','rows']);if(key==='transfers')return list(d,['transfers','changes','history','items','rows']);if(key==='new')return list(d,['new_players','newPlayers','players','items','rows']);return d;}
 async function load(){
- if(loading){loadAgain=true;return;}
- loading=true;$('refresh').disabled=true;$('status').textContent='SYNCING';
- if(loadController)loadController.abort();
- loadController=new AbortController();
- try{
-  const d=await request(API,{signal:loadController.signal});
-  if(!Array.isArray(d.dark))throw Error('В ответе API отсутствует массив dark');
-  DATA=d;
-  $('total').textContent=number(d.total_players);
-  $('dark').textContent=number(d.dark_active??d.dark.length);
-  $('topcount').textContent=number(d.top?.length??0);
-  $('auto').textContent=d.html_auto===true?'ON':'OFF';
-  $('auto').style.color=d.html_auto===true?'var(--green)':'var(--muted)';
-  $('status').textContent='CONNECTED';
-  $('src').textContent='Источник: '+(d.last_success?.source||'HTML parser');
-  $('last').textContent='Обновлено: '+(d.last_success?.tag||new Date().toLocaleTimeString('ru-RU'));
-  renderTab(activeTab);
- }catch(e){
-  if(e.name==='AbortError')return;
-  $('status').textContent='ERROR';
-  $('content').innerHTML='<div class="error"><b>Не удалось загрузить данные</b><p>'+esc(e.message||e)+'</p><button class="btn" id="retry">Повторить</button></div>';
- }finally{
-  loading=false;$('refresh').disabled=false;
-  if(loadAgain){loadAgain=false;load();}
- }
+ if(state.loading)return;state.loading=true;state.errors=[];showError('');$('status').textContent='Обновляем данные…';$('refresh').disabled=true;render();
+ /*
+  ВАЖНО: если команды TBC называются иначе, замени action ниже на реальные команды.
+  Каждый ответ обрабатывается отдельно, чтобы ошибка одного запроса не ломала остальные.
+ */
+ const jobs=[
+  ['dashboard',()=>post(API,{action:'dashboard',server:390,alliance:'DARK'})],
+  ['players',()=>post(API,{action:'players',server:390})],
+  ['alliances',()=>post(API,{action:'alliances',server:390})],
+  ['transfers',()=>post(API,{action:'transfers',server:390,limit:100})],
+  ['new',()=>post(API,{action:'new_players',server:390,limit:100})]
+ ];
+ await Promise.all(jobs.map(async([key,fn])=>{try{const raw=await fn();if(key==='dashboard')state.dashboard=raw&&typeof raw==='object'?raw:null;else if(key==='players')state.players=payload(raw,key).map(player);else if(key==='alliances')state.alliances=payload(raw,key).map(ally);else if(key==='transfers')state.transfers=payload(raw,key);else state.newPlayers=payload(raw,key);}catch(e){state.errors.push(key+': '+e.message);}}));
+ state.loading=false;$('refresh').disabled=false;
+ $('status').textContent=state.errors.length?'Часть данных недоступна':'Проверено: '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+ if(state.errors.length)showError('Не удалось получить часть данных:\n'+state.errors.join('\n')+'\n\nПроверь названия команд API и формат ответов TBC.');
+ render();
 }
-
-async function doSearch(){
- const q=$('q').value.trim();
- $('searchRes').hidden=false;
- if(q.length<2){$('searchRes').innerHTML=empty('Введите минимум 2 символа');return;}
- if(searchLoading)return;
- searchLoading=true;$('searchBtn').disabled=true;$('searchBtn').textContent='…';
- $('searchRes').innerHTML=empty('Ищем игрока…');
- try{
-  const d=await request(SAPI,{method:'POST',body:JSON.stringify({q})});
-  const a=d.found||[];
-  if(!Array.isArray(a)||!a.length){$('searchRes').innerHTML=empty('Игрок не найден');return;}
-  $('searchRes').innerHTML=sectionHead('Результаты поиска','Совпадения в базе',a.length)+'<div class="list">'+a.map((p,i)=>playerRow(p,i,'search')).join('')+'</div>';
- }catch(e){$('searchRes').innerHTML='<div class="error"><b>Ошибка поиска</b><p>'+esc(e.message||e)+'</p></div>';}
- finally{searchLoading=false;$('searchBtn').disabled=false;$('searchBtn').textContent='Найти';}
+function detailGrid(items){return '<div class="grid">'+items.map(([label,value])=>`<div class="detail"><div class="dlabel">${esc(label)}</div><div class="dvalue">${esc(value===null||value===undefined||value===''?'—':value)}</div></div>`).join('')+'</div>';}
+function openModal(title,sub,body){$('modalTitle').textContent=title;$('modalSub').textContent=sub||'';$('modalBody').innerHTML=body;$('overlay').classList.add('open');}
+function closeModal(){$('overlay').classList.remove('open');}
+async function playerProfile(id,name){
+ let p=state.players.find(x=>(id&&pid(x)===String(id))||(!id&&pname(x)===name))||{};
+ openModal(name||pname(p),'Загрузка профиля…','<div class="loading">Получаем данные игрока…</div>');
+ let full=p;
+ if(id){try{const d=await post(API,{id:String(id)});if(d&&typeof d==='object'&&!Array.isArray(d))full={...p,...d};}catch(e){}}
+ const history=list(first(full,['history','nickname_history','nicknameHistory'],[]),['history','items']);
+ const rows=history.slice(-12).reverse().map(h=>`<div class="history"><span>${esc(first(h,['nickname','name'],pname(full)))}</span><span>${esc(date(first(h,['time','timestamp','date'],null)))}</span></div>`).join('');
+ $('modalTitle').textContent=pname(full);$('modalSub').textContent='ID '+(pid(full)||id||'—')+' · Сервер #'+first(full,['server','server_id'],390);
+ $('modalBody').innerHTML=detailGrid([['Альянс',alliance(full)],['Мощь',compact(ppower(full))],['Сервер',first(full,['server','server_id'],390)],['ID игрока',pid(full)],['Первое обнаружение',date(first(full,['first_seen','firstSeen','first_detected','firstDetected'],null))],['Последнее обнаружение',date(first(full,['last_seen','lastSeen','last_detected','lastDetected','time'],null))]])+(rows?'<div class="mtitle">История ника</div>'+rows:'<div class="mtitle">История</div><div class="empty">История не передана API для этого профиля.</div>');
 }
-
-function history(title,items,formatter){
- let h='<div class="history-title">'+title+'</div>';
- if(!Array.isArray(items)||!items.length)return h+'<div class="section-sub">История отсутствует</div>';
- return h+items.map(x=>'<div class="history-row"><div class="history-value">'+formatter(x)+'</div><div class="history-time">'+val(x.fmt)+'</div></div>').join('');
+async function allianceProfile(id,tag){
+ let a=state.alliances.map(ally).find(x=>(id&&x._id===String(id))||x._tag===tag)||ally({tag});
+ openModal(a._tag+' · '+a._name,'Профиль альянса','<div class="loading">Загружаем…</div>');
+ let full=a;
+ if(id){try{const d=await post(API,{alliance_id:String(id)});if(d&&typeof d==='object'&&!Array.isArray(d))full=ally({...a,...d});}catch(e){}}
+ $('modalTitle').textContent=full._tag+' · '+full._name;$('modalSub').textContent='ID альянса '+(full._id||id||'—');
+ $('modalBody').innerHTML=detailGrid([['Участники',fmt(full._members)],['Общая мощь',compact(full._power)],['Убийства',compact(full._kills)],['Сервер',first(full,['server','server_id'],390)],['Уровень',first(full,['level','alliance_level'],'—')],['Обновлено',date(first(full,['asOf','updated_at','updatedAt','timestamp'],null))]]);
 }
-
-async function openPlayer(id){
- $('modal').classList.add('open');
- $('sheet').innerHTML=empty('Загружаем профиль…');
- try{
-  const d=await request(API,{method:'POST',body:JSON.stringify({id:String(id)})});
-  const p=d.player||d;
-  if(!p.id)throw Error(d.error||'Игрок не найден');
-  let h='<div class="profile-head"><div class="avatar">'+initials(p.nick)+'</div><div style="min-width:0"><div class="profile-name">'+val(p.nick)+'</div><div class="profile-id">PLAYER ID · '+val(p.id)+'</div><div class="player-meta"><span class="tag">'+val(p.alliance)+'</span><span>Сервер '+val(p.server)+'</span></div></div><button class="btn btn-quiet close" id="closeModal">✕</button></div>';
-  h+='<div class="profile-grid">'+
-   '<div class="profile-stat"><span>Мощь</span><strong>'+number(p.power)+'</strong></div>'+
-   '<div class="profile-stat"><span>Убийства</span><strong>'+number(p.kills)+'</strong></div>'+
-   '<div class="profile-stat"><span>Ранг / Замок</span><strong>'+val(p.rank)+' / '+val(p.castle)+'</strong></div>'+
-   '<div class="profile-stat"><span>Рост за 7 дней</span><strong>'+number(p.growth7d)+'</strong></div></div>';
-  h+='<div class="section-sub">Первое появление: '+val(p.first_seen_fmt)+'<br>Последнее появление: '+val(p.last_seen_fmt)+'<br>Активность: '+val(p.activity)+'</div>';
-  h+=history('ИСТОРИЯ НИКОВ',p.nick_history,x=>val(x.nick||x.nickname));
-  h+=history('ИСТОРИЯ АЛЬЯНСОВ',p.alliance_history,x=>val(x.alliance));
-  if(Array.isArray(p.alliance_id_history))h+=history('ИСТОРИЯ ID АЛЬЯНСОВ',p.alliance_id_history,x=>val(x.alliance)+' · '+val(x.alliance_id));
-  h+=history('ИСТОРИЯ МОЩИ',p.power_history,x=>'Мощь '+number(x.power)+' · R'+val(x.rank)+' · K'+number(x.kills));
-  $('sheet').innerHTML=h;
- }catch(e){
-  $('sheet').innerHTML='<div class="error">Не удалось открыть профиль: '+esc(e.message||e)+'</div><button class="btn" id="closeModal" style="margin-top:12px">Закрыть</button>';
- }
-}
-
-function closeModal(){$('modal').classList.remove('open');}
-
-document.addEventListener('click',e=>{
- const tab=e.target.closest('[data-tab]');
- if(tab){renderTab(tab.dataset.tab);return;}
- const player=e.target.closest('[data-player]');
- if(player){openPlayer(player.dataset.player);return;}
- if(e.target.closest('#refresh')||e.target.closest('#retry'))load();
- if(e.target.closest('#searchBtn'))doSearch();
- if(e.target.closest('#closeModal')||e.target===$('modal'))closeModal();
-});
-$('q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;state.tab=b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));render();});
+$('query').addEventListener('input',e=>{state.query=e.target.value;render();});
+$('clear').addEventListener('click',()=>{$('query').value='';state.query='';render();});
+$('refresh').addEventListener('click',load);
+$('close').addEventListener('click',closeModal);
+$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-try{if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}
-load();
+$('content').addEventListener('click',e=>{const a=e.target.closest('[data-alliance]');if(a){allianceProfile(a.dataset.alliance,a.dataset.tag);return;}const p=e.target.closest('[data-player]');if(p)playerProfile(p.dataset.player,p.dataset.name);});
+render();load();
+})();
 </script>
 </body>
 </html>
