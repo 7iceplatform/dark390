@@ -1,86 +1,109 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>DARK #390</title><script src='https://telegram.org/js/telegram-web-app.js'></script><style>
-body{margin:0;background:#080c12;color:#e6eef6;font:14px system-ui,sans-serif}
-.wrap{max-width:860px;margin:0 auto;padding:12px}
-.hero{background:#101a26;border:1px solid #1b2a3a;border-radius:14px;padding:14px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.pill{background:#111d2b;border:1px solid #1e334a;border-radius:10px;padding:10px;display:flex;justify-content:space-between}
-.tabs{display:flex;gap:6px;margin:10px 0;overflow:auto;flex-wrap:wrap}
-.tab{padding:7px 10px;border-radius:999px;background:#11202f;border:1px solid #1e364f;color:#93a3b8;cursor:pointer;white-space:nowrap}
-.tab.active{background:#12314d;color:#fff;border-color:#2a5a7f}
-.card{background:#0f1c2a;border:1px solid #1e334a;border-radius:12px;padding:10px}
-.row{display:flex;justify-content:space-between;padding:7px;border-bottom:1px solid #15283b;align-items:center;gap:8px}
-.badge{font-size:11px;padding:2px 6px;border-radius:999px;background:#0e2a44;border:1px solid #214a6b;color:#9ecbff}
-.search{display:flex;gap:6px;margin:8px 0}
-.search input{flex:1;background:#0d1b2b;color:#fff;border:1px solid #1e334a;border-radius:10px;padding:9px}
-.btn{background:#133052;color:#fff;border:1px solid #244a6e;border-radius:10px;padding:8px 12px;cursor:pointer}
-.btn:disabled{opacity:0.5}
-.muted{color:#8ea3bb;font-size:12px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
-.modal.open{display:flex}
-.sheet{width:100%;max-width:840px;max-height:90vh;overflow:auto;background:#0e1c2c;border:1px solid #1e334a;border-radius:16px;padding:14px}
-.input{background:#0b1624;color:#fff;border:1px solid #1e334a;border-radius:8px;padding:8px;width:100%;box-sizing:border-box}
-label{display:block;margin:6px 0 2px;color:#9ecbff;font-size:12px}
-.vars{font:11px monospace;background:#0b1624;border:1px solid #1e334a;border-radius:8px;padding:8px;white-space:pre-wrap;word-break:break-all}
-</style></head><body><div class='wrap'>
-<div class='hero'><h2 style='margin:0'>🌑 DARK #390 — Last Asylum</h2><div class='muted'><span id='interval'>…</span> | <span id='now'>…</span> <span id='auth' style='float:right'></span></div>
-<div class='grid'><div class='pill'><span class='muted'>Players</span><b id='total'>…</b></div><div class='pill'><span class='muted'>DARK</span><b id='dark'>…</b></div><div class='pill'><span class='muted'>Top</span><b id='topcount'>…</b></div><div class='pill'><span class='muted'>Auto</span><b id='auto'>…</b></div></div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конструктор Уведомлений</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #2c3e50; color: #ecf0f1; margin: 0; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+    .container { display: flex; gap: 15px; flex-wrap: wrap; }
+    .panel { background-color: #34495e; padding: 15px; border-radius: 8px; flex: 1; min-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+    
+    .bb-tools { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .bb-btn { background-color: #4a90e2; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;}
+    .bb-btn:hover { background-color: #357abd; }
+    .bb-btn.red { background-color: #e74c3c; }
+    .bb-btn.green { background-color: #2ecc71; }
+    .bb-btn.orange { background-color: #e67e22; }
+    
+    textarea { width: 100%; height: 250px; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #7f8c8d; background-color: #ecf0f1; color: #2c3e50; font-family: monospace; font-size: 14px; resize: vertical; }
+    .counter { text-align: right; margin-top: 5px; font-size: 14px; color: #bdc3c7; }
+    .counter.limit { color: #e74c3c; font-weight: bold; }
+
+    .preview-panel { background-color: #1a252f; padding: 10px; border-radius: 8px; flex: 1; min-width: 300px; }
+    .game-window { background-color: #e8eef3; color: #333; padding: 15px; border-radius: 8px; border: 2px solid #bdc3c7; font-size: 14px; line-height: 1.5; min-height: 250px; word-wrap: break-word; }
+    .game-window b { font-weight: 800; }
+    .game-window i { font-style: italic; }
+    .game-window u { text-decoration: underline; }
+    
+    .game-sys-tag { color: #1E88E5; text-decoration: underline; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>🛠 Конструктор уведомлений</h2>
+
+<div class="container">
+    <div class="panel">
+        <h3>Ввод текста</h3>
+        <div class="bb-tools">
+            <button class="bb-btn" onclick="insertText('[b]', '[/b]')">[b] Жирный</button>
+            <button class="bb-btn" onclick="insertText('[i]', '[/i]')">[i] Курсив</button>
+            <button class="bb-btn" onclick="insertText('[u]', '[/u]')">[u] Подчеркнутый</button>
+            <button class="bb-btn red" onclick="insertText('[color=#E74C3C]', '[/color]')">Красный</button>
+            <button class="bb-btn" onclick="insertText('[color=#5B9DFF]', '[/color]')">Синий</button>
+            <button class="bb-btn green" onclick="insertText('[color=#2E7D32]', '[/color]')">Зеленый</button>
+            <button class="bb-btn orange" onclick="insertText('[color=#E67E22]', '[/color]')">Оранжевый</button>
+            <button class="bb-btn" onclick="insertText('[c][1E88E5][[u][DARK]Ник#:123 X:123 Y:123[/u]][-][/c]', '')">Ссылка на профиль</button>
+        </div>
+        
+        <textarea id="inputText" oninput="updatePreview()" placeholder="Введите ваш текст здесь..."></textarea>
+        <div class="counter" id="charCounter">0 / 1000</div>
+    </div>
+
+    <div class="panel preview-panel">
+        <h3>Предпросмотр (как в игре)</h3>
+        <div class="game-window" id="previewText"></div>
+    </div>
 </div>
-<div class='search'><input id='q' placeholder='Search nick / old nick / ID'><button class='btn' onclick='doSearch()'>Search</button><button class='btn' onclick='openMe()'>Me</button></div>
-<div id='searchRes' class='card' style='display:none'></div>
-<div class='tabs'>
-<div class='tab active' data-t='roster' onclick="switchTab('roster')">Roster DARK</div>
-<div class='tab' data-t='top' onclick="switchTab('top')">Top #390</div>
-<div class='tab' data-t='transfers' onclick="switchTab('transfers')">Transfers</div>
-<div class='tab' data-t='new' onclick="switchTab('new')">New</div>
-<div class='tab' data-t='diplomacy' onclick="switchTab('diplomacy')">🤝 Diplomacy</div>
-<div class='tab' data-t='rat' onclick="switchTab('rat')">📣 Крыса</div>
-<div class='tab' data-t='admin' onclick="switchTab('admin')">🛡 Admin</div>
-</div>
-<div id='content' class='card'>Loading…</div>
-<div class='muted' style='margin-top:8px;font-size:11px'><span id='src'>…</span> | <span id='last'>…</span></div>
-</div>
-<div id='modal' class='modal' onclick="if(event.target===this)closeModal()"><div class='sheet' id='sheet'></div></div>
+
 <script>
-const API='https://api.telebotcreator.com/new-webhook?data=gAAAAABq33Qr05JhWYqC671_lzkY81YoTN4aV-K7l8SWBqcyRu0Uoxq1di8jreSfbgftShGOLwCG8Dtsl9Kmry5WmKHeL9-cIp03NNqYk7HBdI5TWlS3Bpy1yRuZR3Ss51ODVlJzQ17IXMpbn4mLqSPsV4QHfJqvADniVOIn2_1_IFMHqVm1nGHoICH1awQXcrIKb1wpR8lq';const SAPI='https://api.telebotcreator.com/new-webhook?data=gAAAAABq33QrYcJkTz7dcJ_60YB7kRyCbUttaI1w8QZitgbC7pj2f1pFArrVHJbLbJG6MR6cFiURUfhJo_14HTdFB3ESFhVqT1i1xqR8HYnWeH7KsFsYbnbYh9jiiziRNQPnPrKHv1g-ppxUJzle9Sd0XkxruSlUllfg-FEc7ctRCVgj2zv4h2KE2q24DkNpQLSSamiZiY1X';const RBAC='https://api.telebotcreator.com/new-webhook?data=gAAAAABq33m-vKEuRAtjijH8ypX3dPQ72PQgaVxu1UhzrUrOgf-J3-HWAUcLYR8xEW0-RtX8bS1Ru7L6xsakWXh5fH6m2QoZrTjBJesdUvczox7W0spR71OLtWf50WwEv886YLP3QpYsQdqRQEqWf2PS5EjtrGwqHhwxVaEDmPm7RMKnlUKgVvRWc2dW2gZ1V9klmPaa0-c2O7H_Taqku8x08FmIFauAjg%3D%3D';const DAPI='https://api.telebotcreator.com/new-webhook?data=gAAAAABq33m-Qpb-nDrSquF5_ZAUHiLfKufp-TmRsP_5AyKyeo5onAkhLYQsztoZ-YbBV5QxMovkGvwUImBpMzj_9saSsjIM2UcHiAHdRaV71EIV_Bu5zeGCrk9qdWS8mzcZcSzYxMhOFIprv8zNFbkFexn7he5FP_hgBqHvoMACmp079r1lofDlFMVivl_g01PBT-RHdYlE6SbbqEFCnxoZIAJXi3kr3A%3D%3D';const RAPI='https://api.telebotcreator.com/new-webhook?data=gAAAAABq33m-D81WrkBcv4lH6mOnEznFp-9fB5gAV08EAl8j7GWxh0EW8Gh4VPg_5hGvcN38qQ8nFc7tkp6l2ShDn8URwXydL5UP178QokqG1UIZli77KOGnGD6GUBbIGXXaDI7JM0suhtbcuolqprYylviTbSR6BB1ucwg0fuY7Q5yJ7r9J_Wg8XLRpSoLdwkDY-MVow5_D';
-let DATA=null;let ME=null;let TG_ID="";let INIT_DATA="";
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function getTelegramIds(){let tg=window.Telegram&&window.Telegram.WebApp;if(tg&&tg.initData) INIT_DATA=tg.initData;if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id) TG_ID=String(tg.initDataUnsafe.user.id);try{let u=new URL(location.href);let q=u.searchParams.get("tg_id");if(q) TG_ID=q;}catch(e){}}
-async function callRBAC(payload){payload.tg_id=TG_ID;payload.initData=INIT_DATA;let r=await fetch(RBAC,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let t=await r.text();let j={};try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,300))}return j.result||j;}
-async function callDiplo(payload){payload.tg_id=TG_ID;payload.initData=INIT_DATA;let r=await fetch(DAPI,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let t=await r.text();let j={};try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,300))}return j.result||j;}
-async function callRat(payload){payload.tg_id=TG_ID;payload.initData=INIT_DATA;let r=await fetch(RAPI,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let t=await r.text();let j={};try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,300))}return j.result||j;}
-async function callPlayer(id){let r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});let t=await r.text();let j={};try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,140))}return j.result||j;}
-async function refreshMe(){try{let r=await callRBAC({action:"me"});if(r.registered){ME=r.user;document.getElementById('auth').innerHTML=esc(ME.status)+' · '+esc(ME.role)+(r.has_rat?' · 🐀':'');}else{document.getElementById('auth').innerHTML='<button class="btn" onclick="doRegister()">Register</button>';}}catch(e){document.getElementById('auth').textContent=String(e).slice(0,60)}}
-async function doRegister(){try{let r=await callRBAC({action:"register"});alert(r.status||r.error||JSON.stringify(r).slice(0,200));await refreshMe();}catch(e){alert(String(e).slice(0,400))}}
-async function openMe(){let sheet=document.getElementById('sheet');sheet.innerHTML='Loading…';document.getElementById('modal').classList.add('open');try{let r=await callRBAC({action:"me"});let h='<div style="display:flex;justify-content:space-between"><h3>Me</h3><button class="btn" onclick="closeModal()">Close</button></div>';h+='<div class="vars">'+esc(JSON.stringify(r,null,2))+'</div>';if(!r.registered) h+='<button class="btn" onclick="doRegister()">Register pending</button>';sheet.innerHTML=h;}catch(e){sheet.innerHTML='Error '+esc(String(e))+'<button class="btn" onclick="closeModal()">Close</button>'}}
-async function load(){getTelegramIds();try{let tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}let r=await fetch(API);let t=await r.text();let j={};try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,200))}let d=j.result||j;if(d&&d.error) throw new Error(d.error);if(!d.dark) throw new Error('no dark');DATA=d;document.getElementById('interval').textContent=(d.interval?(d.interval/60)+'m':'-');document.getElementById('now').textContent=d.fmt_now||'';document.getElementById('total').textContent=d.total_players??'-';document.getElementById('dark').textContent=d.dark_active??(d.dark?d.dark.length:'0');document.getElementById('topcount').textContent=d.top?d.top.length:'0';document.getElementById('auto').textContent=(d.html_auto===true?'ON':'OFF');document.getElementById('src').textContent=(d.last_success?d.last_success.source:'html');document.getElementById('last').textContent=(d.last_success?(d.last_success.tag+' '+d.last_success.count):'');await refreshMe();switchTab('roster');}catch(e){document.getElementById('content').innerHTML='<span style="color:#fb7185">Error '+esc(String(e))+'</span>';}}
-function switchTab(t){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x.dataset.t===t)});let c=document.getElementById('content');if(!DATA&&t!=='diplomacy'&&t!=='rat'&&t!=='admin'){c.textContent='Loading…';return;}
-if(t==='roster'){let h='';let dark=DATA.dark||[];if(dark.length===0)h='<div class="muted">Empty</div>';else dark.forEach(function(p,i){h+='<div class="row" style="cursor:pointer" onclick="openPlayer(\''+esc(p.id)+'\')"><div><span class="muted">'+(i+1)+'.</span> <b>'+esc(p.nick)+'</b> <span class="muted">R'+esc(p.rank||'-')+' · '+esc(p.id)+'</span></div><div style="text-align:right"><b>'+String(p.power||0)+'</b><br><span class="muted">'+esc(p.id)+'</span></div></div>';});c.innerHTML=h;}
-else if(t==='top'){let h='';(DATA.top||[]).forEach(function(a,i){h+='<div class="row"><div>'+(i+1)+'. <b>'+esc(a.tag)+'</b> <span class="muted">'+esc(a.id)+'</span></div><div><b>'+a.members+'</b></div></div>';});c.innerHTML=h||'No data';}
-else if(t==='transfers'){let h='';(DATA.transfers||[]).forEach(function(e){h+='<div class="row" style="cursor:pointer" onclick="openPlayer(\''+esc(e.pid)+'\')"><div><b>'+esc(e.nick)+'</b> <span class="muted">'+esc(e.pid)+'</span></div><div style="text-align:right"><div class="muted">'+esc(e.fmt)+'</div><div>'+esc(e.from)+' → <b>'+esc(e.to)+'</b></div></div></div>';});c.innerHTML=h||'No transfers 7d';}
-else if(t==='new'){let h='';(DATA.new_players||[]).forEach(function(e){h+='<div class="row" style="cursor:pointer" onclick="openPlayer(\''+esc(e.pid)+'\')"><div><b>'+esc(e.nick)+'</b> <span class="muted">'+esc(e.pid)+'</span> → <b>'+esc(e.alliance)+'</b></div><div class="muted">'+esc(e.fmt)+'</div></div>';});c.innerHTML=h||'No new 7d';}
-else if(t==='diplomacy'){c.innerHTML='<div class="muted">Loading diplomacy…</div>';loadDiplomacy();}
-else if(t==='rat'){c.innerHTML='<div class="muted">Loading templates…</div>';loadRat();}
-else if(t==='admin'){c.innerHTML='<div class="muted">Loading admin…</div>';loadAdmin();}
-}
-async function loadDiplomacy(){let c=document.getElementById('content');try{let r=await callDiplo({action:"diplomacy_list"});if(!r.ok){c.innerHTML='<div style="color:#fb7185">'+esc(r.error||'forbidden')+'</div><div class="muted">Need view_diplomacy — R4/R5+</div>';return;}let h='<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" onclick="openDiploForm()">+ Contact</button><button class="btn" onclick="openDiploRelationForm()">+ Relation</button></div>';h+='<div style="margin-top:8px"><b>Contacts ('+(r.contacts||[]).length+')</b></div>';(r.contacts||[]).forEach(function(a){h+='<div class="row"><div><b>'+esc(a.tag||'')+'</b> '+esc(a.name||'')+' <span class="muted">'+esc(a.alliance_id||a.id||'')+' · '+esc(a.server_id||'')+'</span><br><span class="muted">'+esc(a.leader||'')+' '+esc(a.contact_telegram||'')+'</span></div><div class="muted">'+esc(a.link||'')+'</div></div>'});h+='<div style="margin-top:8px"><b>Relations ('+(r.relations||[]).length+')</b></div>';(r.relations||[]).forEach(function(a){h+='<div class="row"><div><b>'+esc(a.status||'')+'</b> <span class="muted">'+esc(a.alliance_id||'')+'</span> until '+esc(a.until||'')+'<br>'+esc(a.note||'')+'</div></div>'});let notes=r.notes||[];h+='<div style="margin-top:8px"><b>Notes ('+notes.length+')</b></div>';notes.forEach(function(n){h+='<div class="card" style="margin-top:6px">'+esc(n.text||'')+' <span class="muted">'+(n.private?' 🔒 private':'')+' · '+esc(n.alliance_id||'')+' · '+esc(n.created_by||'')+'</span></div>'});h+='<div class="card" style="margin-top:8px"><label>Quick note</label><input id="diplo_note" class="input" placeholder="text"><label>Alliance ID</label><input id="diplo_note_aid" class="input" placeholder="alliance_id"><label><input type="checkbox" id="diplo_priv"> private</label><button class="btn" onclick="sendDiploNote()">Send note</button></div>';c.innerHTML=h;}catch(e){c.innerHTML='Error '+esc(String(e).slice(0,400))}}
-function openDiploForm(){let sheet=document.getElementById('sheet');sheet.innerHTML='<h3>Contact</h3><label>Alliance ID</label><input id="f_aid" class="input"><label>Tag</label><input id="f_tag" class="input"><label>Name</label><input id="f_name" class="input"><label>Server</label><input id="f_srv" class="input" value="390"><label>Leader</label><input id="f_leader" class="input"><label>Telegram</label><input id="f_tg" class="input"><label>Link</label><input id="f_link" class="input"><div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="sendDiploContact()">Save</button><button class="btn" onclick="closeModal()">Close</button></div>';document.getElementById('modal').classList.add('open');}
-async function sendDiploContact(){let p={action:"diplomacy_upsert",kind:"contact",alliance_id:document.getElementById('f_aid').value.trim(),alliance_tag:document.getElementById('f_tag').value.trim(),alliance_name:document.getElementById('f_name').value.trim(),server_id:document.getElementById('f_srv').value.trim(),leader:document.getElementById('f_leader').value.trim(),contact_telegram:document.getElementById('f_tg').value.trim(),link:document.getElementById('f_link').value.trim()};try{let r=await callDiplo(p);alert(r.ok?'Saved':r.error);closeModal();loadDiplomacy();}catch(e){alert(String(e).slice(0,500))}}
-function openDiploRelationForm(){let sheet=document.getElementById('sheet');sheet.innerHTML='<h3>Relation</h3><label>Alliance ID</label><input id="r_aid" class="input"><label>Status (ally/neutral/enemy/truce)</label><input id="r_status" class="input" value="neutral"><label>Until</label><input id="r_until" class="input" placeholder="2026-05-01"><label>Note</label><input id="r_note" class="input"><div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="sendDiploRelation()">Save</button><button class="btn" onclick="closeModal()">Close</button></div>';document.getElementById('modal').classList.add('open');}
-async function sendDiploRelation(){let p={action:"diplomacy_upsert",kind:"relation",alliance_id:document.getElementById('r_aid').value.trim(),status:document.getElementById('r_status').value.trim(),until:document.getElementById('r_until').value.trim(),note:document.getElementById('r_note').value.trim()};try{let r=await callDiplo(p);alert(r.ok?'Saved':r.error);closeModal();loadDiplomacy();}catch(e){alert(String(e).slice(0,500))}}
-async function sendDiploNote(){let p={action:"diplomacy_upsert",kind:"note",alliance_id:document.getElementById('diplo_note_aid').value.trim(),note:document.getElementById('diplo_note').value.trim(),private:document.getElementById('diplo_priv').checked};try{let r=await callDiplo(p);alert(r.ok?'Saved':r.error);loadDiplomacy();}catch(e){alert(String(e).slice(0,500))}}
-async function loadRat(){let c=document.getElementById('content');try{let r=await callRat({action:"templates_list"});if(!r.ok){c.innerHTML='<div style="color:#fb7185">'+esc(r.error||'forbidden')+'</div><div class="muted">Need rat_access — ask superadmin</div>';return;}let cats=r.categories||[];let tpls=r.templates||{};let h='<div class="muted">Cats: '+cats.map(esc).join(', ')+'</div>';h+='<div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="openRatForm()">+ Template</button><button class="btn" onclick="loadRat()">Reload</button></div>';for(let id in tpls){let t=tpls[id];h+='<div class="card" style="margin-top:8px"><div style="display:flex;justify-content:space-between"><b>'+esc(t.title)+'</b><span class="badge">'+esc(t.category)+'</span></div><div class="muted">'+esc(t.id)+' · by '+esc(t.updated_by||'')+'</div><div style="margin-top:6px"><b>RU</b><div class="vars">'+esc(t.body_ru||'')+'</div><div style="margin-top:4px"><span id="cnt_'+esc(id)+'" class="muted">'+String((t.body_ru||'').length)+' chars</span> <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById(\'ru_'+esc(id)+'\').textContent);alert(\'Copied RU\')">Copy RU</button> <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById(\'en_'+esc(id)+'\').textContent);alert(\'Copied EN\')">Copy EN</button> <button class="btn" onclick="deleteRat(\''+esc(id)+'\')" style="background:#3a1020">Delete</button></div><div id="ru_'+esc(id)+'" style="display:none">'+esc(t.body_ru||'')+'</div><div id="en_'+esc(id)+'" style="display:none">'+esc(t.body_en||'')+'</div></div><div style="margin-top:4px"><b>EN</b><div class="vars">'+esc(t.body_en||'')+'</div></div><div class="muted">Vars highlight: unknown {var} in red</div></div>'; }h+='<div class="card" style="margin-top:8px"><label>Preview vars</label><div class="muted">{alliance_name} {alliance_tag} {server_id} {event_name} {event_date} {event_time} {player_name} — unknown vars подсвечиваются</div></div>';c.innerHTML=h;}catch(e){c.innerHTML='Error '+esc(String(e).slice(0,500))}}
-function openRatForm(){let sheet=document.getElementById('sheet');sheet.innerHTML='<h3>Template</h3><label>Title</label><input id="rat_title" class="input"><label>Category</label><input id="rat_cat" class="input" value="События" list="catlist"><datalist id="catlist"><option value="Осада нежити"><option value="Дуэль альянсов"><option value="События"><option value="Дипломатия"><option value="Набор игроков"><option value="Перемирия"><option value="Объявления R4/R5"><option value="Ежедневные уведомления"><option value="Экстренные сообщения"></datalist><label>Body RU (BBCode, vars)</label><textarea id="rat_ru" class="input" style="height:90px"></textarea><label>Body EN</label><textarea id="rat_en" class="input" style="height:90px"></textarea><div class="muted" id="rat_preview"></div><div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="sendRat()">Save</button><button class="btn" onclick="closeModal()">Close</button></div>';let ru=document.getElementById('rat_ru'),en=document.getElementById('rat_en');function upd(){let t=(ru.value||'')+' '+(en.value||'');let vars=["alliance_name","alliance_tag","server_id","event_name","event_date","event_time","player_name"];let re=/\{([^}]+)\}/g,m,unk=[];while(m=re.exec(t)){if(vars.indexOf(m[1])<0) unk.push(m[1])}document.getElementById('rat_preview').innerHTML=unk.length?'<span style="color:#fb7185">Unknown vars: '+unk.map(esc).join(', ')+'</span>':'<span style="color:#4ade80">Vars OK</span>';}
-ru.addEventListener('input',upd);en.addEventListener('input',upd);document.getElementById('modal').classList.add('open');}
-async function sendRat(){let p={action:"template_upsert",title:document.getElementById('rat_title').value.trim(),category:document.getElementById('rat_cat').value.trim(),body_ru:document.getElementById('rat_ru').value,body_en:document.getElementById('rat_en').value};try{let r=await callRat(p);alert(r.ok?'Saved '+r.template.id:r.error);closeModal();loadRat();}catch(e){alert(String(e).slice(0,500))}}
-async function deleteRat(id){if(!confirm('Delete '+id+'?'))return;try{let r=await callRat({action:"template_delete",template_id:id});alert(r.ok?'Deleted':r.error);loadRat();}catch(e){alert(String(e).slice(0,500))}}
-async function loadAdmin(){let c=document.getElementById('content');try{let r=await callRBAC({action:"admin_list"});if(!r.ok){c.innerHTML='<div style="color:#fb7185">'+esc(r.error)+'</div><div class="muted">Need manage_users (admin/superadmin)</div>';return;}let h='<div class="muted">Total '+r.users.length+'</div>';r.users.forEach(function(u){h+='<div class="card" style="margin-top:6px"><div style="display:flex;justify-content:space-between"><b>'+esc(u.tg_id)+'</b><span class="badge">'+esc(u.status)+' · '+esc(u.role)+(u.has_rat?' · 🐀':'')+'</span></div><div class="muted">'+esc(u.username||'')+' linked '+esc(u.linked_player_id||'—')+'</div><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><button class="btn" onclick="adminAct(\'admin_approve\',\''+esc(u.tg_id)+'\')">Approve</button><button class="btn" onclick="adminAct(\'admin_reject\',\''+esc(u.tg_id)+'\')">Reject</button><button class="btn" onclick="openAdminRole(\''+esc(u.tg_id)+'\',\''+esc(u.role)+'\')">Role</button><button class="btn" onclick="openAdminLink(\''+esc(u.tg_id)+'\')">Link</button><button class="btn" onclick="adminAct(\'admin_unlink\',\''+esc(u.tg_id)+'\')">Unlink</button></div></div>'});c.innerHTML=h;}catch(e){c.innerHTML='Error '+esc(String(e).slice(0,500))}}
-function openAdminRole(tid,cur){let sheet=document.getElementById('sheet');sheet.innerHTML='<h3>Set role '+esc(tid)+'</h3><label>Role (member/r4/r5/admin/superadmin)</label><input id="role_val" class="input" value="'+esc(cur)+'"><label>Extra perms (comma: rat_access,manage_templates...)</label><input id="role_extra" class="input" placeholder="rat_access"><div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="sendAdminRole(\''+esc(tid)+'\')">Save</button><button class="btn" onclick="closeModal()">Close</button></div><div class="muted">Only superadmin can grant rat_access</div>';document.getElementById('modal').classList.add('open');}
-async function sendAdminRole(tid){let role=document.getElementById('role_val').value.trim().toLowerCase();let extra=document.getElementById('role_extra').value.split(',').map(function(s){return s.trim()}).filter(Boolean);try{let r=await callRBAC({action:"admin_set_role",target_tg_id:tid,role:role,perms_extra:extra});alert(r.ok?'Saved':r.error);closeModal();loadAdmin();}catch(e){alert(String(e).slice(0,500))}}
-function openAdminLink(tid){let sheet=document.getElementById('sheet');sheet.innerHTML='<h3>Link player '+esc(tid)+'</h3><label>Player ID (9-15 digits)</label><input id="link_pid" class="input" placeholder="145563254785"><div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="sendAdminLink(\''+esc(tid)+'\')">Link</button><button class="btn" onclick="closeModal()">Close</button></div>';document.getElementById('modal').classList.add('open');}
-async function sendAdminLink(tid){let pid=document.getElementById('link_pid').value.trim();try{let r=await callRBAC({action:"admin_link",target_tg_id:tid,player_id:pid});alert(r.ok?'Linked':r.error);closeModal();loadAdmin();}catch(e){alert(String(e).slice(0,500))}}
-async function adminAct(act,tid){try{let r=await callRBAC({action:act,target_tg_id:tid});alert(r.ok?'OK '+act:r.error);loadAdmin();}catch(e){alert(String(e).slice(0,500))}}
-async function doSearch(){let q=document.getElementById('q').value.trim();if(q.length<2){alert('2+ chars');return;}let box=document.getElementById('searchRes');box.style.display='block';box.textContent='Searching…';try{let r=await fetch(SAPI,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:q})});let t=await r.text();let j={};try{j=JSON.parse(t);}catch(e){throw new Error(t.slice(0,120))}let d=j.result||j;let arr=d.found||[];if(!arr||arr.length===0)box.innerHTML='<div class="muted">'+esc(q)+' not found</div>';else{let h='<b>Found '+arr.length+'</b>';arr.forEach(function(p){h+='<div class="row" style="cursor:pointer" onclick="openPlayer(\''+esc(p.id)+'\')"><div><b>'+esc(p.nick)+'</b> <span class="muted">'+esc(p.id)+'</span></div><div><b>'+esc(p.alliance)+'</b> <span class="badge">'+String(p.power||0)+'</span></div></div>'});box.innerHTML=h;}}catch(e){box.innerHTML='Error '+esc(String(e));}}
-async function openPlayer(id){let sheet=document.getElementById('sheet');sheet.innerHTML='Loading '+esc(id)+'…';document.getElementById('modal').classList.add('open');try{let d=await callPlayer(id);let p=d.player||d;if(!p||!p.id)throw new Error(d.error||'no player');let h='<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">'+esc(p.nick)+' <span class="muted">'+esc(p.id)+'</span></h3><button class="btn" onclick="closeModal()">Close</button></div>';h+='<div class="muted">Alliance <b>'+esc(p.alliance)+'</b> <span class="muted">'+esc(p.alliance_id||'')+'</span> · Server '+esc(p.server)+' · Excluded '+String(p.excluded)+'</div>';h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0"><div class="card">Power <b>'+String(p.power||'—')+'</b><br>Rank '+String(p.rank||'—')+' · Castle '+String(p.castle||'—')+'</div><div class="card">Kills '+String(p.kills||'—')+'<br>Activity '+String(p.activity||'—')+'<br>Growth7 '+String(p.growth7d||'—')+'</div></div>';h+='<div class="muted">First '+esc(p.first_seen_fmt)+' · Last '+esc(p.last_seen_fmt)+'</div>';function histList(arr,title){if(!arr||arr.length===0) return '<div class="muted">'+title+': No data</div>';let h2='<div style="margin-top:8px"><b>'+title+' ('+arr.length+')</b>';arr.forEach(function(it){h2+='<div class="row"><span>'+esc(it.nick||it.alliance||it.power||'')+'</span><span class="muted">'+esc(it.fmt||'')+'</span></div>';});h2+='</div>';return h2;}h+=histList(p.nick_history,'Nick history');h+=histList(p.alliance_history,'Alliance history');if(p.alliance_id_history&&p.alliance_id_history.length>0){h+=histList(p.alliance_id_history.map(function(it){return {alliance: it.alliance+' ('+it.alliance_id+')', fmt: it.fmt}}),'Alliance ID history');}if(p.power_history&&p.power_history.length>0){let ph='<div style="margin-top:8px"><b>Power history ('+p.power_history.length+')</b>';p.power_history.forEach(function(it){ph+='<div class="row"><span>Power '+String(it.power||'—')+' R'+String(it.rank||'—')+' K'+String(it.kills||'—')+'</span><span class="muted">'+esc(it.fmt||'')+'</span></div>';});ph+='</div>';h+=ph;}sheet.innerHTML=h;}catch(e){sheet.innerHTML='<span style="color:#fb7185">Error '+esc(String(e))+'</span><br><button class="btn" onclick="closeModal()">Close</button>';}}
-function closeModal(){document.getElementById('modal').classList.remove('open');}
-load();
-</script></body></html>
+    const inputArea = document.getElementById('inputText');
+    const previewArea = document.getElementById('previewText');
+    const counter = document.getElementById('charCounter');
+
+    function insertText(openTag, closeTag) {
+        const startPos = inputArea.selectionStart;
+        const endPos = inputArea.selectionEnd;
+        const text = inputArea.value;
+        
+        if (startPos !== endPos) {
+            const selectedText = text.substring(startPos, endPos);
+            inputArea.value = text.substring(0, startPos) + openTag + selectedText + closeTag + text.substring(endPos);
+        } else {
+            inputArea.value = text.substring(0, startPos) + openTag + closeTag + text.substring(endPos);
+        }
+        
+        inputArea.focus();
+        inputArea.setSelectionRange(startPos + openTag.length, startPos + openTag.length);
+        updatePreview();
+    }
+
+    function updatePreview() {
+        let text = inputArea.value;
+        
+        const length = text.length;
+        counter.textContent = length + ' / 1000';
+        if (length > 1000) {
+            counter.classList.add('limit');
+        } else {
+            counter.classList.remove('limit');
+        }
+
+        text = text.replace(/\[b\]/g, '<b>').replace(/\[\/b\]/g, '</b>');
+        text = text.replace(/\[i\]/g, '<i>').replace(/\[\/i\]/g, '</i>');
+        text = text.replace(/\[u\]/g, '<u>').replace(/\[\/u\]/g, '</u>');
+        text = text.replace(/\[color=(#[0-9a-fA-F]{6})\]/g, '<span style="color: $1">').replace(/\[\/color\]/g, '</span>');
+        
+        text = text.replace(/\[c\]\[(.*?)\]\[\[u\](.*?)\[\/u\]\]\[-\]\[\/c\]/g, '<span class="game-sys-tag" style="color:$1">$2</span>');
+
+        text = text.replace(/\n/g, '<br>');
+
+        previewArea.innerHTML = text;
+    }
+    
+    updatePreview();
+</script>
+
+</body>
+</html>
