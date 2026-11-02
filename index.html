@@ -2,186 +2,1070 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Конструктор</title>
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+>
+
+<title>Конструктор уведомлений</title>
+
 <style>
-    /* Стили самого приложения */
-    body { 
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-        background-color: #2b323a; 
-        color: #fff; 
-        margin: 0; 
-        padding: 10px; 
-        display: flex; 
-        flex-direction: column; 
-        gap: 10px; 
-        box-sizing: border-box; 
-    }
-    
-    .panel { background-color: #36404a; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-    
-    /* Панель кнопок */
-    .tools { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-    .tool-btn { background: #4a90e2; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; font-size: 13px; cursor: pointer; }
-    .tool-btn:active { background: #357abd; }
-    .tool-btn.sys { background: #8e44ad; width: 100%; margin-top: 5px; }
+    :root {
+        --app-bg: #2b323a;
+        --panel-bg: #36404a;
+        --panel-border: rgba(255,255,255,0.08);
 
-    .color-palette { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
-    .color-btn { width: 30px; height: 30px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
-    
-    /* Поле ввода */
-    textarea { 
-        width: 100%; height: 140px; padding: 10px; box-sizing: border-box; 
-        border-radius: 5px; border: 1px solid #7f8c8d; background-color: #e8eef3; 
-        color: #333; font-family: monospace; font-size: 14px; resize: none; 
-    }
-    
-    .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-    .counter { font-size: 14px; color: #bdc3c7; font-weight: bold; }
-    
-    .btn-copy { background-color: #2ecc71; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer; }
-    .btn-copy:active { background-color: #27ae60; }
+        --accent: #4a90e2;
+        --accent-active: #357abd;
 
-    /* --- ДИЗАЙН ПРЕДПРОСМОТРА (ТОЧЬ-В-ТОЧЬ КАК В ИГРЕ) --- */
-    .preview-wrapper { background: transparent; padding: 0; }
-    
-    .game-window { 
-        background-color: #e2e9f0; /* Цвет фона игры */
-        color: #2c3e50; /* Цвет текста игры */
-        padding: 12px 15px; 
-        border-radius: 6px; 
-        border: 1px solid #b0c4de;
-        font-size: 15px; 
-        line-height: 1.5; 
-        word-wrap: break-word; 
-        min-height: 150px;
-        font-family: Arial, sans-serif;
+        --green: #2ecc71;
+        --danger: #e74c3c;
+
+        /* Реальный фон уведомления в игре */
+        --game-bg: #e2e9f0;
+        --game-text: #2c3e50;
     }
-    
-    /* Имитация тегов игры в предпросмотре */
-    .game-window b { font-weight: bold; }
-    .game-window i { font-style: italic; }
-    .game-window u { text-decoration: underline; }
-    
-    /* Системная ссылка (ник) */
-    .game-sys-tag { text-decoration: underline; font-weight: bold; }
+
+    * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+
+        width: 100%;
+        min-height: 100%;
+
+        background: var(--app-bg);
+    }
+
+    body {
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            Arial,
+            sans-serif;
+
+        color: #fff;
+
+        padding:
+            calc(10px + env(safe-area-inset-top))
+            10px
+            calc(10px + env(safe-area-inset-bottom));
+
+        overflow-x: hidden;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================
+       ВКЛАДКИ
+    ========================= */
+
+    .tabs {
+        display: flex;
+        gap: 6px;
+
+        margin-bottom: 10px;
+
+        background: #20262d;
+
+        padding: 5px;
+
+        border-radius: 10px;
+    }
+
+    .tab-btn {
+        flex: 1;
+
+        border: none;
+        border-radius: 7px;
+
+        padding: 10px;
+
+        color: #bdc3c7;
+        background: transparent;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+    .tab-btn.active {
+        background: var(--accent);
+        color: white;
+    }
+
+
+    /* =========================
+       ПАНЕЛИ
+    ========================= */
+
+    .panel {
+        background: var(--panel-bg);
+
+        border: 1px solid var(--panel-border);
+
+        border-radius: 12px;
+
+        padding: 10px;
+
+        box-shadow:
+            0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+
+    /* =========================
+       ЗАГОЛОВКИ
+    ========================= */
+
+    .section-title {
+        font-size: 12px;
+
+        font-weight: 700;
+
+        color: #bdc3c7;
+
+        text-transform: uppercase;
+
+        margin:
+            4px 0
+            8px;
+    }
+
+
+    /* =========================
+       КНОПКИ ФОРМАТИРОВАНИЯ
+    ========================= */
+
+    .tools {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 6px;
+
+        margin-bottom: 10px;
+    }
+
+    .tool-btn {
+        background: #46525d;
+
+        color: white;
+
+        border: none;
+
+        padding: 8px 10px;
+
+        min-height: 38px;
+
+        border-radius: 7px;
+
+        font-weight: 700;
+
+        font-size: 13px;
+
+        cursor: pointer;
+
+        touch-action: manipulation;
+    }
+
+    .tool-btn:active {
+        transform: scale(0.97);
+        background: var(--accent-active);
+    }
+
+    .tool-btn.primary {
+        background: var(--accent);
+    }
+
+    .tool-btn.hide-keyboard {
+        background: #59636d;
+        margin-left: auto;
+    }
+
+
+    /* =========================
+       ЦВЕТА
+    ========================= */
+
+    .color-palette {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 7px;
+
+        margin-bottom: 10px;
+    }
+
+    .color-btn {
+        width: 34px;
+        height: 34px;
+
+        border-radius: 8px;
+
+        border:
+            2px solid
+            rgba(255,255,255,0.25);
+
+        cursor: pointer;
+
+        padding: 0;
+
+        touch-action: manipulation;
+    }
+
+    .color-btn:active {
+        transform: scale(0.92);
+    }
+
+
+    /* =========================
+       TEXTAREA
+    ========================= */
+
+    textarea {
+        width: 100%;
+
+        min-height: 200px;
+
+        padding: 12px;
+
+        border-radius: 9px;
+
+        border:
+            1px solid
+            rgba(255,255,255,0.15);
+
+        background: #e8eef3;
+
+        color: #2c3e50;
+
+        font-family:
+            ui-monospace,
+            SFMono-Regular,
+            Menlo,
+            Consolas,
+            monospace;
+
+        font-size: 14px;
+
+        line-height: 1.5;
+
+        resize: vertical;
+
+        outline: none;
+
+        -webkit-appearance: none;
+    }
+
+    textarea:focus {
+        border-color: var(--accent);
+
+        box-shadow:
+            0 0 0 2px
+            rgba(74,144,226,0.2);
+    }
+
+
+    /* =========================
+       НИЖНЯЯ ПАНЕЛЬ
+    ========================= */
+
+    .action-bar {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 10px;
+
+        margin-top: 10px;
+    }
+
+    .counter {
+        font-size: 14px;
+
+        color: #bdc3c7;
+
+        font-weight: 700;
+    }
+
+    .btn-copy {
+        background: var(--green);
+
+        color: white;
+
+        border: none;
+
+        padding: 10px 16px;
+
+        border-radius: 8px;
+
+        font-weight: 700;
+
+        font-size: 14px;
+
+        cursor: pointer;
+
+        white-space: nowrap;
+    }
+
+    .btn-copy:active {
+        transform: scale(0.97);
+    }
+
+
+    /* =========================
+       ПРЕДПРОСМОТР ИГРЫ
+    ========================= */
+
+    .preview-wrapper {
+        width: 100%;
+    }
+
+    .preview-header {
+        color: #bdc3c7;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        margin:
+            5px 0
+            8px;
+    }
+
+    .game-window {
+        width: 100%;
+
+        min-height: 280px;
+
+        background-color: var(--game-bg);
+
+        color: var(--game-text);
+
+        padding: 15px;
+
+        border-radius: 8px;
+
+        font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        font-size: 15px;
+
+        line-height: 1.5;
+
+        overflow-wrap: anywhere;
+
+        word-break: break-word;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.55),
+            0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    #previewArea {
+        white-space: normal;
+    }
+
+    .game-window strong {
+        font-weight: 700;
+    }
+
+    .game-window em {
+        font-style: italic;
+    }
+
+    .game-window u {
+        text-decoration: underline;
+
+        text-underline-offset: 2px;
+    }
+
+    .empty-preview {
+        color: #7f8c8d;
+
+        font-style: italic;
+    }
+
+
+    /* =========================
+       ПОДСКАЗКА
+    ========================= */
+
+    .hint {
+        margin-top: 8px;
+
+        font-size: 11px;
+
+        line-height: 1.4;
+
+        color: #aeb6bf;
+    }
+
+
+    @media (max-width: 380px) {
+
+        body {
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+
+        .tool-btn {
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        .game-window {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+    }
 </style>
 </head>
+
+
 <body>
 
-<div class="panel">
-    <!-- BB коды -->
-    <div class="tools">
-        <button class="tool-btn" onclick="wrapText('[b]', '[/b]')">[b] Жирный</button>
-        <button class="tool-btn" onclick="wrapText('[i]', '[/i]')">[i] Курсив</button>
-        <button class="tool-btn" onclick="wrapText('[u]', '[/u]')">[u] Подчеркнутый</button>
-        <button class="tool-btn sys" onclick="insertSysTag()">Вставить ссылку на профиль (YurAri)</button>
+<div class="app">
+
+
+    <!-- =========================
+         ВКЛАДКИ
+    ========================= -->
+
+    <div class="tabs">
+
+        <button
+            class="tab-btn active"
+            id="editorTab"
+            type="button"
+            onclick="switchTab('editor')"
+        >
+            📝 Редактор
+        </button>
+
+        <button
+            class="tab-btn"
+            id="previewTab"
+            type="button"
+            onclick="switchTab('preview')"
+        >
+            👁 Просмотр
+        </button>
+
     </div>
-    
-    <!-- Цвета -->
-    <div class="color-palette">
-        <div class="color-btn" style="background-color: #E67E22;" onclick="wrapText('[E67E22]', '[-]')"></div> <!-- Оранжевый -->
-        <div class="color-btn" style="background-color: #1E88E5;" onclick="wrapText('[1E88E5]', '[-]')"></div> <!-- Синий -->
-        <div class="color-btn" style="background-color: #E74C3C;" onclick="wrapText('[E74C3C]', '[-]')"></div> <!-- Красный -->
-        <div class="color-btn" style="background-color: #2E7D32;" onclick="wrapText('[2E7D32]', '[-]')"></div> <!-- Зеленый -->
-        <div class="color-btn" style="background-color: #8E44AD;" onclick="wrapText('[8E44AD]', '[-]')"></div> <!-- Фиолетовый -->
-        <div class="color-btn" style="background-color: #D35400;" onclick="wrapText('[D35400]', '[-]')"></div> <!-- Темно-оранжевый -->
-        <div class="color-btn" style="background-color: #333333;" onclick="wrapText('[333333]', '[-]')"></div> <!-- Темно-серый -->
-        <div class="color-btn" style="background-color: #C0392B;" onclick="wrapText('[C0392B]', '[-]')"></div> <!-- Темно-красный -->
+
+
+    <!-- =========================
+         РЕДАКТОР
+    ========================= -->
+
+    <div
+        class="panel"
+        id="editorPanel"
+    >
+
+        <div class="section-title">
+            Форматирование
+        </div>
+
+
+        <div class="tools">
+
+            <button
+                class="tool-btn primary"
+                type="button"
+                onclick="wrapText('[b]', '[/b]')"
+            >
+                B Жирный
+            </button>
+
+
+            <button
+                class="tool-btn primary"
+                type="button"
+                onclick="wrapText('[i]', '[/i]')"
+            >
+                I Курсив
+            </button>
+
+
+            <button
+                class="tool-btn primary"
+                type="button"
+                onclick="wrapText('[u]', '[/u]')"
+            >
+                U Подчеркнуть
+            </button>
+
+
+            <button
+                class="tool-btn hide-keyboard"
+                type="button"
+                onclick="hideKeyboard()"
+            >
+                ⌨️ Скрыть
+            </button>
+
+        </div>
+
+
+        <div class="section-title">
+            Цвет текста
+        </div>
+
+
+        <div class="color-palette">
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#E67E22"
+                title="#E67E22"
+                onclick="wrapColor('E67E22')"
+            ></button>
+
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#1E88E5"
+                title="#1E88E5"
+                onclick="wrapColor('1E88E5')"
+            ></button>
+
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#E74C3C"
+                title="#E74C3C"
+                onclick="wrapColor('E74C3C')"
+            ></button>
+
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#2E7D32"
+                title="#2E7D32"
+                onclick="wrapColor('2E7D32')"
+            ></button>
+
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#8E44AD"
+                title="#8E44AD"
+                onclick="wrapColor('8E44AD')"
+            ></button>
+
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#D35400"
+                title="#D35400"
+                onclick="wrapColor('D35400')"
+            ></button>
+
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#333333"
+                title="#333333"
+            ></button>
+
+
+            <button
+                class="color-btn"
+                type="button"
+                style="background:#C0392B"
+                title="#C0392B"
+                onclick="wrapColor('C0392B')"
+            ></button>
+
+        </div>
+
+
+        <textarea
+            id="inputArea"
+            maxlength="1000"
+            placeholder="Введите текст уведомления..."
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="sentences"
+            spellcheck="false"
+        ></textarea>
+
+
+        <div class="action-bar">
+
+            <div
+                class="counter"
+                id="charCount"
+            >
+                0 / 1000
+            </div>
+
+
+            <button
+                class="btn-copy"
+                id="copyButton"
+                type="button"
+                onclick="copyText()"
+            >
+                📋 Копировать
+            </button>
+
+        </div>
+
+
+        <div class="hint">
+            Цвета в игре: [RRGGBB]текст[-]
+        </div>
+
     </div>
-    
-    <!-- Поле ввода (связано с предпросмотром через CSS) -->
-    <textarea id="inputArea" placeholder="Введите текст уведомления..."></textarea>
-    
-    <div class="action-bar">
-        <div class="counter" id="charCount">0 / 1000</div>
-        <button class="btn-copy" onclick="copyText()">📋 Копировать</button>
+
+
+
+    <!-- =========================
+         ПРЕДПРОСМОТР
+    ========================= -->
+
+    <div
+        class="preview-wrapper hidden"
+        id="previewPanel"
+    >
+
+        <div class="preview-header">
+            Предпросмотр в стиле игры
+        </div>
+
+
+        <div class="game-window">
+
+            <div id="previewArea">
+                <span class="empty-preview">
+                    Здесь появится ваше уведомление...
+                </span>
+            </div>
+
+        </div>
+
     </div>
+
+
 </div>
 
-<!-- Блок предпросмотра -->
-<div class="preview-wrapper">
-    <div class="game-window">
-        <div id="previewArea"></div>
-    </div>
-</div>
+
 
 <script>
-    // Работа с кнопками
-    const inputArea = document.getElementById('inputArea');
+
+    const inputArea =
+        document.getElementById('inputArea');
+
+    const previewArea =
+        document.getElementById('previewArea');
+
+    const charCount =
+        document.getElementById('charCount');
+
+    const editorPanel =
+        document.getElementById('editorPanel');
+
+    const previewPanel =
+        document.getElementById('previewPanel');
+
+    const editorTab =
+        document.getElementById('editorTab');
+
+    const previewTab =
+        document.getElementById('previewTab');
+
+
+
+    /* =========================
+       ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+    ========================= */
+
+    function switchTab(tab) {
+
+        if (tab === 'editor') {
+
+            editorPanel.classList.remove('hidden');
+            previewPanel.classList.add('hidden');
+
+            editorTab.classList.add('active');
+            previewTab.classList.remove('active');
+
+        }
+
+
+        if (tab === 'preview') {
+
+            // Закрываем клавиатуру
+            hideKeyboard();
+
+            renderPreview();
+
+            editorPanel.classList.add('hidden');
+            previewPanel.classList.remove('hidden');
+
+            editorTab.classList.remove('active');
+            previewTab.classList.add('active');
+
+        }
+
+    }
+
+
+
+    /* =========================
+       СКРЫТЬ КЛАВИАТУРУ
+    ========================= */
+
+    function hideKeyboard() {
+
+        inputArea.blur();
+
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        }
+
+    }
+
+
+
+    /* =========================
+       ОБЕРНУТЬ В ТЕГ
+    ========================= */
 
     function wrapText(openTag, closeTag) {
-        const startPos = inputArea.selectionStart;
-        const endPos = inputArea.selectionEnd;
-        const text = inputArea.value;
-        
-        if (startPos !== endPos) {
-            const selectedText = text.substring(startPos, endPos);
-            inputArea.value = text.substring(0, startPos) + openTag + selectedText + closeTag + text.substring(endPos);
-        } else {
-            inputArea.value = text.substring(0, startPos) + openTag + closeTag + text.substring(endPos);
-        }
-        inputArea.focus();
-        inputArea.setSelectionRange(startPos + openTag.length, startPos + openTag.length);
-        renderPreview(); // Обновляем вручную, так как события могут блокироваться
-    }
 
-    function insertSysTag() {
-        const sysText = '[c][1E88E5][[u][DARK]YurAri#:390 X:440 Y:493[/u]][-][/c]';
-        inputArea.value += sysText;
+        const start =
+            inputArea.selectionStart;
+
+        const end =
+            inputArea.selectionEnd;
+
+        const value =
+            inputArea.value;
+
+
+        const before =
+            value.substring(0, start);
+
+        const selected =
+            value.substring(start, end);
+
+        const after =
+            value.substring(end);
+
+
+        inputArea.value =
+            before +
+            openTag +
+            selected +
+            closeTag +
+            after;
+
+
+        const newStart =
+            start + openTag.length;
+
+        const newEnd =
+            end + openTag.length;
+
+
+        inputArea.setSelectionRange(
+            newStart,
+            newEnd
+        );
+
+
         renderPreview();
+
+
+        /*
+         * ВАЖНО:
+         * Не вызываем inputArea.focus()
+         * иначе на мобильном снова появляется клавиатура
+         */
+
     }
 
-    // Функция обновления предпросмотра и счетчика
+
+
+    /* =========================
+       ДОБАВИТЬ ЦВЕТ
+       [RRGGBB]ТЕКСТ[-]
+    ========================= */
+
+    function wrapColor(color) {
+
+        wrapText(
+            '[' + color + ']',
+            '[-]'
+        );
+
+    }
+
+
+
+    /* =========================
+       HTML ESCAPE
+    ========================= */
+
+    function escapeHTML(text) {
+
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+    }
+
+
+
+    /* =========================
+       ПРЕДПРОСМОТР BB-КОДОВ
+    ========================= */
+
     function renderPreview() {
-        let rawText = inputArea.value;
-        
-        // 1. Обновляем счетчик
-        const count = rawText.length;
-        const counter = document.getElementById('charCount');
-        counter.textContent = count + ' / 1000';
-        counter.style.color = count > 1000 ? '#e74c3c' : '#bdc3c7';
 
-        // 2. Конвертируем BB-коды в HTML для предпросмотра
-        let htmlText = rawText;
+        const rawText =
+            inputArea.value;
 
-        // Наш кастомный цвет [XXXXXX]
-        htmlText = htmlText.replace(/\[([0-9A-Fa-f]{6})\]/g, '<span style="color: #$1">');
-        htmlText = htmlText.replace(/\[\-\]/g, '</span>');
 
-        // Стандартные теги
-        htmlText = htmlText.replace(/\[b\]/g, '<b>').replace(/\[\/b\]/g, '</b>');
-        htmlText = htmlText.replace(/\[i\]/g, '<i>').replace(/\[\/i\]/g, '</i>');
-        htmlText = htmlText.replace(/\[u\]/g, '<u>').replace(/\[\/u\]/g, '</u>');
-        
-        // Системная ссылка [c][COLOR] ... [-][/c]
-        htmlText = htmlText.replace(/\[c\]\[([0-9A-Fa-f]{6})\](.*?)\[-\]\[\/c\]/g, '<span class="game-sys-tag" style="color: #$1">$2</span>');
+        /* Счетчик */
 
-        // Переносы строк
-        htmlText = htmlText.replace(/\n/g, '<br>');
+        const count =
+            rawText.length;
 
-        // Вставляем результат в блок
-        document.getElementById('previewArea').innerHTML = htmlText;
+
+        charCount.textContent =
+            count + ' / 1000';
+
+
+        charCount.style.color =
+            count >= 1000
+                ? '#e74c3c'
+                : '#bdc3c7';
+
+
+
+        /* Пустой текст */
+
+        if (!rawText.trim()) {
+
+            previewArea.innerHTML =
+                '<span class="empty-preview">' +
+                'Здесь появится ваше уведомление...' +
+                '</span>';
+
+            return;
+
+        }
+
+
+
+        /*
+         * Сначала экранируем пользовательский HTML
+         */
+
+        let html =
+            escapeHTML(rawText);
+
+
+
+        /*
+         * Цвета:
+         *
+         * [E67E22]Текст[-]
+         *
+         * Превращаем:
+         *
+         * <span style="color:#E67E22">
+         * Текст
+         * </span>
+         */
+
+        html = html.replace(
+            /\[([0-9A-Fa-f]{6})\]/g,
+            '<span style="color:#$1">'
+        );
+
+
+        html = html.replace(
+            /\[-\]/g,
+            '</span>'
+        );
+
+
+
+        /*
+         * Жирный
+         */
+
+        html = html
+            .replace(/\[b\]/gi, '<strong>')
+            .replace(/\[\/b\]/gi, '</strong>');
+
+
+
+        /*
+         * Курсив
+         */
+
+        html = html
+            .replace(/\[i\]/gi, '<em>')
+            .replace(/\[\/i\]/gi, '</em>');
+
+
+
+        /*
+         * Подчёркивание
+         */
+
+        html = html
+            .replace(/\[u\]/gi, '<u>')
+            .replace(/\[\/u\]/gi, '</u>');
+
+
+
+        /*
+         * Переносы строк
+         */
+
+        html =
+            html.replace(/\n/g, '<br>');
+
+
+
+        previewArea.innerHTML =
+            html;
+
     }
 
-    // Слушаем ввод в поле
-    inputArea.addEventListener('input', renderPreview);
 
-    // Копирование
-    function copyText() {
-        inputArea.select();
-        document.execCommand('copy');
-        window.getSelection().removeAllRanges();
-        
-        const btn = document.querySelector('.btn-copy');
-        const originalText = btn.textContent;
-        btn.textContent = '✅ Скопировано!';
-        btn.style.backgroundColor = '#3498db';
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.backgroundColor = '#2ecc71';
-        }, 2000);
+
+    /* =========================
+       ВВОД ТЕКСТА
+    ========================= */
+
+    inputArea.addEventListener(
+        'input',
+        renderPreview
+    );
+
+
+
+    /* =========================
+       КОПИРОВАНИЕ
+    ========================= */
+
+    async function copyText() {
+
+        const text =
+            inputArea.value;
+
+
+        if (!text) {
+            return;
+        }
+
+
+        try {
+
+            if (
+                navigator.clipboard &&
+                window.isSecureContext
+            ) {
+
+                await navigator.clipboard.writeText(text);
+
+            } else {
+
+                inputArea.focus();
+                inputArea.select();
+
+                document.execCommand('copy');
+
+                inputArea.setSelectionRange(
+                    inputArea.value.length,
+                    inputArea.value.length
+                );
+
+                hideKeyboard();
+
+            }
+
+
+            const button =
+                document.getElementById('copyButton');
+
+            const original =
+                button.textContent;
+
+
+            button.textContent =
+                '✅ Скопировано!';
+
+
+            setTimeout(() => {
+
+                button.textContent =
+                    original;
+
+            }, 1800);
+
+
+        } catch (error) {
+
+            alert(
+                'Не удалось скопировать текст'
+            );
+
+        }
+
     }
+
+
+
+    /* Первый рендер */
+
+    renderPreview();
+
 </script>
 
 </body>
