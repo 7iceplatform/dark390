@@ -3,88 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Конструктор Уведомлений</title>
+<title>Конструктор</title>
 <style>
-    :root {
-        --bg-color: #2b323a;
-        --panel-bg: #36404a;
-        --game-bg: #DDE6ED; /* Точный цвет фона игры */
-        --game-text: #1A202C; /* Точный цвет текста игры */
+    /* Стили самого приложения */
+    body { 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        background-color: #2b323a; 
+        color: #fff; 
+        margin: 0; 
+        padding: 10px; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 10px; 
+        box-sizing: border-box; 
     }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; gap: 10px; height: 100vh; box-sizing: border-box; }
     
-    .panel { background-color: var(--panel-bg); padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+    .panel { background-color: #36404a; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
     
-    .color-palette { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
-    .color-btn { width: 32px; height: 32px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: rgba(255,255,255,0.8); }
-    .color-btn:active { transform: scale(0.9); }
-    
-    textarea { width: 100%; height: 120px; padding: 8px; box-sizing: border-box; border-radius: 5px; border: none; background-color: #e8eef3; color: #333; font-family: monospace; font-size: 14px; resize: none; }
-    
-    .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
-    .counter { font-size: 14px; color: #bdc3c7; font-weight: bold;}
-    .counter.limit { color: #e74c3c; }
-    
-    .btn-copy { background-color: #2ecc71; color: white; border: none; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px; }
-    .btn-copy:active { background-color: #27ae60; }
-    .btn-copy.copied { background-color: #3498db; }
+    /* Панель кнопок */
+    .tools { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .tool-btn { background: #4a90e2; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; font-size: 13px; cursor: pointer; }
+    .tool-btn:active { background: #357abd; }
+    .tool-btn.sys { background: #8e44ad; width: 100%; margin-top: 5px; }
 
-    /* Предпросмотр - точная копия игры */
-    .preview-container { flex-grow: 1; overflow-y: auto; }
+    .color-palette { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+    .color-btn { width: 30px; height: 30px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
+    
+    /* Поле ввода */
+    textarea { 
+        width: 100%; height: 140px; padding: 10px; box-sizing: border-box; 
+        border-radius: 5px; border: 1px solid #7f8c8d; background-color: #e8eef3; 
+        color: #333; font-family: monospace; font-size: 14px; resize: none; 
+    }
+    
+    .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .counter { font-size: 14px; color: #bdc3c7; font-weight: bold; }
+    
+    .btn-copy { background-color: #2ecc71; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer; }
+    .btn-copy:active { background-color: #27ae60; }
+
+    /* --- ДИЗАЙН ПРЕДПРОСМОТРА (ТОЧЬ-В-ТОЧЬ КАК В ИГРЕ) --- */
+    .preview-wrapper { background: transparent; padding: 0; }
+    
     .game-window { 
-        background-color: var(--game-bg); 
-        color: var(--game-text); 
-        padding: 15px; 
-        border-radius: 8px; 
+        background-color: #e2e9f0; /* Цвет фона игры */
+        color: #2c3e50; /* Цвет текста игры */
+        padding: 12px 15px; 
+        border-radius: 6px; 
+        border: 1px solid #b0c4de;
         font-size: 15px; 
-        line-height: 1.4; 
+        line-height: 1.5; 
         word-wrap: break-word; 
         min-height: 150px;
-        border: 1px solid #c0d0e0;
+        font-family: Arial, sans-serif;
     }
-    .game-window b { font-weight: 800; }
+    
+    /* Имитация тегов игры в предпросмотре */
+    .game-window b { font-weight: bold; }
     .game-window i { font-style: italic; }
     .game-window u { text-decoration: underline; }
     
-    /* Стиль для системного тега (координаты/ник) */
+    /* Системная ссылка (ник) */
     .game-sys-tag { text-decoration: underline; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="panel">
-    <div class="color-palette" id="palette">
-        <!-- Цвета подобраны специально для светлого фона игры -->
-        <div class="color-btn" style="background-color: #E67E22;" onclick="insertTag('[E67E22]', '[-]')">A</div> <!-- Оранжевый -->
-        <div class="color-btn" style="background-color: #1E88E5;" onclick="insertTag('[1E88E5]', '[-]')">A</div> <!-- Синий -->
-        <div class="color-btn" style="background-color: #E74C3C;" onclick="insertTag('[E74C3C]', '[-]')">A</div> <!-- Красный -->
-        <div class="color-btn" style="background-color: #2E7D32;" onclick="insertTag('[2E7D32]', '[-]')">A</div> <!-- Зеленый -->
-        <div class="color-btn" style="background-color: #8E44AD;" onclick="insertTag('[8E44AD]', '[-]')">A</div> <!-- Фиолетовый -->
-        <div class="color-btn" style="background-color: #D35400;" onclick="insertTag('[D35400]', '[-]')">A</div> <!-- Темно-оранжевый -->
-        <div class="color-btn" style="background-color: #333333;" onclick="insertTag('[333333]', '[-]')">A</div> <!-- Темно-серый -->
-        <div class="color-btn" style="background-color: #C0392B;" onclick="insertTag('[C0392B]', '[-]')">A</div> <!-- Темно-красный -->
+    <!-- BB коды -->
+    <div class="tools">
+        <button class="tool-btn" onclick="wrapText('[b]', '[/b]')">[b] Жирный</button>
+        <button class="tool-btn" onclick="wrapText('[i]', '[/i]')">[i] Курсив</button>
+        <button class="tool-btn" onclick="wrapText('[u]', '[/u]')">[u] Подчеркнутый</button>
+        <button class="tool-btn sys" onclick="insertSysTag()">Вставить ссылку на профиль (YurAri)</button>
     </div>
     
-    <textarea id="inputText" oninput="updatePreview()" placeholder="Введите текст..."></textarea>
+    <!-- Цвета -->
+    <div class="color-palette">
+        <div class="color-btn" style="background-color: #E67E22;" onclick="wrapText('[E67E22]', '[-]')"></div> <!-- Оранжевый -->
+        <div class="color-btn" style="background-color: #1E88E5;" onclick="wrapText('[1E88E5]', '[-]')"></div> <!-- Синий -->
+        <div class="color-btn" style="background-color: #E74C3C;" onclick="wrapText('[E74C3C]', '[-]')"></div> <!-- Красный -->
+        <div class="color-btn" style="background-color: #2E7D32;" onclick="wrapText('[2E7D32]', '[-]')"></div> <!-- Зеленый -->
+        <div class="color-btn" style="background-color: #8E44AD;" onclick="wrapText('[8E44AD]', '[-]')"></div> <!-- Фиолетовый -->
+        <div class="color-btn" style="background-color: #D35400;" onclick="wrapText('[D35400]', '[-]')"></div> <!-- Темно-оранжевый -->
+        <div class="color-btn" style="background-color: #333333;" onclick="wrapText('[333333]', '[-]')"></div> <!-- Темно-серый -->
+        <div class="color-btn" style="background-color: #C0392B;" onclick="wrapText('[C0392B]', '[-]')"></div> <!-- Темно-красный -->
+    </div>
+    
+    <!-- Поле ввода (связано с предпросмотром через CSS) -->
+    <textarea id="inputArea" placeholder="Введите текст уведомления..."></textarea>
     
     <div class="action-bar">
-        <div class="counter" id="charCounter">0 / 1000</div>
-        <button class="btn-copy" id="copyBtn" onclick="copyToClipboard()">📋 Копировать</button>
+        <div class="counter" id="charCount">0 / 1000</div>
+        <button class="btn-copy" onclick="copyText()">📋 Копировать</button>
     </div>
 </div>
 
-<div class="preview-container panel" style="padding:0; background:none; box-shadow:none;">
-    <div class="game-window" id="previewText"></div>
+<!-- Блок предпросмотра -->
+<div class="preview-wrapper">
+    <div class="game-window">
+        <div id="previewArea"></div>
+    </div>
 </div>
 
 <script>
-    const inputArea = document.getElementById('inputText');
-    const previewArea = document.getElementById('previewText');
-    const counter = document.getElementById('charCounter');
-    const copyBtn = document.getElementById('copyBtn');
+    // Работа с кнопками
+    const inputArea = document.getElementById('inputArea');
 
-    // Функция вставки тегов формата [ЦВЕТ]Текст[-]
-    function insertTag(openTag, closeTag) {
+    function wrapText(openTag, closeTag) {
         const startPos = inputArea.selectionStart;
         const endPos = inputArea.selectionEnd;
         const text = inputArea.value;
@@ -95,57 +121,67 @@
         } else {
             inputArea.value = text.substring(0, startPos) + openTag + closeTag + text.substring(endPos);
         }
-        
         inputArea.focus();
         inputArea.setSelectionRange(startPos + openTag.length, startPos + openTag.length);
-        updatePreview();
+        renderPreview(); // Обновляем вручную, так как события могут блокироваться
     }
 
-    // Кнопка копирования
-    function copyToClipboard() {
-        inputArea.select();
-        document.execCommand('copy');
-        // Сброс выделения
-        window.getSelection().removeAllRanges();
-        
-        copyBtn.textContent = '✅ Скопировано!';
-        copyBtn.classList.add('copied');
-        setTimeout(() => {
-            copyBtn.textContent = '📋 Копировать';
-            copyBtn.classList.remove('copied');
-        }, 2000);
+    function insertSysTag() {
+        const sysText = '[c][1E88E5][[u][DARK]YurAri#:390 X:440 Y:493[/u]][-][/c]';
+        inputArea.value += sysText;
+        renderPreview();
     }
 
-    function updatePreview() {
-        let text = inputArea.value;
+    // Функция обновления предпросмотра и счетчика
+    function renderPreview() {
+        let rawText = inputArea.value;
         
-        // Счетчик
-        const length = text.length;
-        counter.textContent = length + ' / 1000';
-        counter.className = length > 1000 ? 'counter limit' : 'counter';
+        // 1. Обновляем счетчик
+        const count = rawText.length;
+        const counter = document.getElementById('charCount');
+        counter.textContent = count + ' / 1000';
+        counter.style.color = count > 1000 ? '#e74c3c' : '#bdc3c7';
 
-        // 1. Парсим теги [ЦВЕТ] ... [-] (ВАШ ФОРМАТ)
-        // Ищем 6-значные hex-коды в скобках
-        text = text.replace(/\[([0-9A-Fa-f]{6})\]/g, '<span style="color: #$1">');
-        // Закрываем цвет тегом [-]
-        text = text.replace(/\[\-\]/g, '</span>');
+        // 2. Конвертируем BB-коды в HTML для предпросмотра
+        let htmlText = rawText;
 
-        // 2. Парсим стандартные теги
-        text = text.replace(/\[b\]/g, '<b>').replace(/\[\/b\]/g, '</b>');
-        text = text.replace(/\[i\]/g, '<i>').replace(/\[\/i\]/g, '</i>');
-        text = text.replace(/\[u\]/g, '<u>').replace(/\[\/u\]/g, '</u>');
+        // Наш кастомный цвет [XXXXXX]
+        htmlText = htmlText.replace(/\[([0-9A-Fa-f]{6})\]/g, '<span style="color: #$1">');
+        htmlText = htmlText.replace(/\[\-\]/g, '</span>');
+
+        // Стандартные теги
+        htmlText = htmlText.replace(/\[b\]/g, '<b>').replace(/\[\/b\]/g, '</b>');
+        htmlText = htmlText.replace(/\[i\]/g, '<i>').replace(/\[\/i\]/g, '</i>');
+        htmlText = htmlText.replace(/\[u\]/g, '<u>').replace(/\[\/u\]/g, '</u>');
         
-        // 3. Системный тег игры [c][ЦВЕТ][[u]Текст[/u]][-][/c]
-        // Превращаем его в кликабельную ссылку для предпросмотра
-        text = text.replace(/\[c\]\[([0-9A-Fa-f]{6})\](.*?)\[-\]\[\/c\]/g, '<span class="game-sys-tag" style="color: #$1">$2</span>');
+        // Системная ссылка [c][COLOR] ... [-][/c]
+        htmlText = htmlText.replace(/\[c\]\[([0-9A-Fa-f]{6})\](.*?)\[-\]\[\/c\]/g, '<span class="game-sys-tag" style="color: #$1">$2</span>');
 
         // Переносы строк
-        text = text.replace(/\n/g, '<br>');
+        htmlText = htmlText.replace(/\n/g, '<br>');
 
-        previewArea.innerHTML = text;
+        // Вставляем результат в блок
+        document.getElementById('previewArea').innerHTML = htmlText;
     }
-    
-    updatePreview();
+
+    // Слушаем ввод в поле
+    inputArea.addEventListener('input', renderPreview);
+
+    // Копирование
+    function copyText() {
+        inputArea.select();
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        
+        const btn = document.querySelector('.btn-copy');
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Скопировано!';
+        btn.style.backgroundColor = '#3498db';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.backgroundColor = '#2ecc71';
+        }, 2000);
+    }
 </script>
 
 </body>
