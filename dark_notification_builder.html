@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2b323a">
+<title>DARK | Конструктор уведомлений</title>
+<style>
+:root{
+  --app-bg:#2b323a;--panel:#36404a;--panel-2:#202830;--line:rgba(255,255,255,.09);
+  --accent:#4a90e2;--green:#2ecc71;--game-bg:#e2e9f0;--game-text:#2c3e50;
+  /* Приглушённая палитра, подобранная под фон игрового сообщения #E2E9F0 */
+  --c-purple:#76568F;--c-blue:#526F91;--c-green:#56816D;--c-amber:#AD8050;--c-red:#A56868;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--app-bg);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{padding:calc(10px + env(safe-area-inset-top)) 10px calc(12px + env(safe-area-inset-bottom));}
+button{font:inherit;cursor:pointer}
+.app{max-width:720px;margin:0 auto}
+.tabs{display:flex;gap:5px;padding:5px;margin-bottom:10px;background:#20262d;border-radius:12px}
+.tab{flex:1;border:0;border-radius:8px;padding:11px 5px;background:transparent;color:#bdc3c7;font-size:13px;font-weight:750}
+.tab.active{background:var(--accent);color:#fff}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 4px 15px #0003}
+.hidden{display:none!important}
+.eyebrow{margin:2px 0 9px;color:#bdc3c7;font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.tools,.palette,.actions,.template-actions{display:flex;flex-wrap:wrap;gap:7px}
+.tool{border:0;border-radius:8px;padding:9px 11px;background:#4a5662;color:#fff;font-size:13px;font-weight:700}
+.tool.primary{background:var(--accent)}
+.tool.muted{margin-left:auto;background:#59636d}
+.swatch{width:34px;height:34px;border:2px solid #ffffff55;border-radius:8px}
+textarea{display:block;width:100%;min-height:220px;margin-top:10px;padding:12px;border:1px solid #aab6c2;border-radius:9px;background:#e8eef3;color:#263747;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical;outline:none}
+textarea:focus{border-color:#8eb8e8;box-shadow:0 0 0 2px #4a90e233}
+.actionbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.counter{font-size:13px;font-weight:750;color:#bdc3c7}
+.counter.over{color:#ff8d8d}
+.copy{border:0;border-radius:8px;padding:10px 15px;background:var(--green);color:#fff;font-weight:800}
+.preview-title{margin:6px 0 8px;color:#bdc3c7;font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.game-window{min-height:160px;padding:14px 15px;border:1px solid #b0c4de;border-radius:7px;background:var(--game-bg);color:var(--game-text);font:15px/1.5 Arial,Helvetica,sans-serif;overflow-wrap:anywhere;word-break:break-word}
+.game-window b{font-weight:700}.game-window i{font-style:italic}.game-window u{text-decoration:underline;text-underline-offset:2px}
+.empty{color:#778492;font-style:italic}
+.category{display:flex;align-items:center;gap:12px;width:100%;padding:15px;border:1px solid var(--line);border-radius:11px;background:linear-gradient(135deg,#40334e,#36404a);color:#fff;text-align:left}
+.category .symbol{font-size:27px}.category strong{display:block;font-size:16px}.category small{display:block;margin-top:3px;color:#c5cbd2;font-size:12px}
+.days{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.day{min-height:74px;padding:12px;border:1px solid var(--line);border-radius:9px;background:#414c57;color:#fff;text-align:left}
+.day:before{content:"";display:block;width:28px;height:3px;margin-bottom:9px;border-radius:4px;background:var(--c-green)}
+.day strong{display:block;font-size:14px}.day small{display:block;margin-top:4px;color:#bdc3c7;font-size:11px}
+.day.unavailable{opacity:.55}.day.unavailable:before{background:#87919b}
+.back{margin-bottom:10px;border:0;border-radius:8px;padding:9px 12px;background:#4a5662;color:#fff;font-weight:700}
+.detail-title{margin:4px 0 10px;font-size:19px;font-weight:850}
+.poster{position:relative;display:flex;align-items:center;justify-content:center;min-height:150px;margin-bottom:12px;overflow:hidden;border:1px solid var(--line);border-radius:11px;background:linear-gradient(135deg,#253449,#57446c);text-align:center}
+.poster img{display:block;width:100%;max-height:260px;object-fit:cover}
+.poster-placeholder{padding:25px 15px}
+.poster-placeholder strong{display:block;font-size:20px;letter-spacing:.04em}
+.poster-placeholder small{display:block;margin-top:8px;color:#d1d9e2;font-size:12px}
+.poster-controls{display:flex;gap:8px;align-items:center;margin:0 0 12px;color:#c7d0d9;font-size:12px}
+.poster-controls input{max-width:100%;font-size:12px}
+.template-count{margin:8px 0;color:#c4ccd4;font-size:12px;font-weight:700}
+.template-actions{margin-top:12px}
+.template-actions button{flex:1;min-width:120px;border:0;border-radius:8px;padding:12px;color:#fff;font-weight:800}
+.use{background:var(--green)}.copy-blue{background:var(--accent)}
+.note{margin-top:12px;color:#bdc3c7;font-size:12px;line-height:1.45}
+@media(max-width:380px){body{padding-left:7px;padding-right:7px}.tab{font-size:11px}.tool{padding:8px;font-size:12px}.game-window{padding:11px;font-size:14px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="tabs">
+    <button class="tab active" data-tab="editor">Редактор</button>
+    <button class="tab" data-tab="preview">Просмотр</button>
+    <button class="tab" data-tab="templates">Шаблоны</button>
+  </nav>
+
+  <section id="editor" class="panel">
+    <div class="eyebrow">Форматирование</div>
+    <div class="tools">
+      <button class="tool primary" data-wrap="[b]" data-close="[/b]"><b>B</b> Жирный</button>
+      <button class="tool primary" data-wrap="[i]" data-close="[/i]"><i>I</i> Курсив</button>
+      <button class="tool primary" data-wrap="[u]" data-close="[/u]"><u>U</u> Подчеркнуть</button>
+      <button class="tool muted" id="hideKeyboard">Скрыть клавиатуру</button>
+    </div>
+    <div class="eyebrow" style="margin-top:13px">Цвет текста</div>
+    <div class="palette" id="palette">
+      <button class="swatch" title="Фиолетовый" style="background:#76568F" data-color="76568F"></button>
+      <button class="swatch" title="Стальной синий" style="background:#526F91" data-color="526F91"></button>
+      <button class="swatch" title="Приглушённый зелёный" style="background:#56816D" data-color="56816D"></button>
+      <button class="swatch" title="Янтарный" style="background:#AD8050" data-color="AD8050"></button>
+      <button class="swatch" title="Бордовый" style="background:#A56868" data-color="A56868"></button>
+    </div>
+    <textarea id="inputArea" maxlength="1000" placeholder="Введите текст уведомления..." autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+    <div class="actionbar">
+      <div id="charCount" class="counter">0 / 1000</div>
+      <button class="copy" id="copyEditor">Копировать текст</button>
+    </div>
+  </section>
+
+  <section id="preview" class="hidden">
+    <div class="preview-title">Предпросмотр в стиле игрового уведомления</div>
+    <div class="game-window" id="previewArea"><span class="empty">Здесь появится уведомление.</span></div>
+  </section>
+
+  <section id="templates" class="hidden">
+    <div id="templateHome">
+      <div class="eyebrow">Библиотека шаблонов</div>
+      <button class="category" id="openDuel">
+        <span class="symbol">🏆</span>
+        <span><strong>Дуэль альянсов</strong><small>Еженедельный план по дням</small></span>
+      </button>
+      <div class="note">Постеры можно добавить к каждому дню отдельно. Текст шаблона остаётся без эмодзи, чтобы игра не отображала квадраты.</div>
+    </div>
+    <div id="duelDays" class="hidden">
+      <button class="back" id="backHome">← К категориям</button>
+      <div class="eyebrow">Дуэль альянсов · время сервера UTC−2</div>
+      <div class="days" id="daysGrid"></div>
+    </div>
+    <div id="templateDetail" class="hidden">
+      <button class="back" id="backDays">← Ко всем дням</button>
+      <h2 class="detail-title" id="detailTitle"></h2>
+      <div class="poster" id="poster">
+        <div class="poster-placeholder" id="posterPlaceholder"><strong>DARK | IMPERIUM</strong><small>ДУЭЛЬ АЛЬЯНСОВ<br>ПЛАН ДНЯ</small></div>
+      </div>
+      <div class="poster-controls">
+        <label for="posterUpload">Добавить постер:</label>
+        <input id="posterUpload" type="file" accept="image/*">
+      </div>
+      <div class="template-count" id="templateCount"></div>
+      <div class="game-window" id="templatePreview"></div>
+      <div class="template-actions">
+        <button class="copy-blue" id="copyTemplate">Копировать</button>
+        <button class="use" id="useTemplate">Использовать шаблон</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const templates = {
+  tuesday: {
+    day:"Вторник",
+    text:`[76568F][b]ДУЭЛЬ АЛЬЯНСОВ — ВТОРНИК[/b][-]
+[526F91]Время сервера: UTC−2[-]
+
+[526F91][b]00:00–04:00[/b][-]
+• распаковываем все постройки;
+• ставим короткие здания и завершаем вручную.
+[56816D]Очки БА и БНВ: завершение построек и строительные ускорения.[-]
+
+[526F91][b]04:00–08:00[/b][-]
+• обучаем войска.
+
+[526F91][b]08:00–12:00[/b][-]
+• улучшаем технологии.
+
+[526F91][b]12:00–16:00[/b][-]
+• тратим энергию;
+• при необходимости немного кормим ворона.
+[AD8050]Основной день кормления — понедельник, этап можно пропустить.[-]
+
+[526F91][b]16:00–20:00[/b][-]
+• используем немного противоядия;
+• призываем героев в таверне.
+[AD8050]Основной день улучшения героев — четверг, этап можно пропустить.[-]
+
+[AD8050][b]ДОПОЛНИТЕЛЬНО:[/b][-]
+• проводим UR секретную операцию и отправляем UR караван;
+• нанимаем выживших в таверне;
+• улучшаем здания и собираем ресурсы.
+
+[A56868][b]НЕ ДЕЛАЕМ:[/b][-]
+• не используем ускорения, кроме строительных;
+• не открываем сундуки снаряжения ворона;
+• не повышаем уровень, звёзды и навыки героев;
+• не кормим ворона.
+
+[76568F][b]ПОДГОТОВКА К СРЕДЕ:[/b][-]
+Выполняем задания Соколиной башни, награды не забираем.`
+  },
+  wednesday: {
+    day:"Среда",
+    text:`[76568F][b]ДУЭЛЬ АЛЬЯНСОВ — СРЕДА[/b][-]
+[526F91]Время сервера: UTC−2[-]
+
+[526F91][b]00:00–04:00[/b][-]
+• обучаем войска.
+[56816D]Очки БА: обучение войск и соответствующие ускорения.[-]
+
+[526F91][b]04:00–08:00[/b][-]
+• проводим исследования;
+• используем свитки обучения.
+
+[526F91][b]08:00–12:00[/b][-]
+• тратим энергию.
+
+[526F91][b]12:00–16:00[/b][-]
+• противоядие и таверна — лучше пропустить.
+
+[526F91][b]16:00–20:00[/b][-]
+• строительство и ускорения стройки — по возможности копим до пятницы или следующей БА.
+
+[AD8050][b]ДОПОЛНИТЕЛЬНО:[/b][-]
+• выполняем задания Соколиной башни;
+• активно улучшаем лабораторию;
+• используем свитки обучения на ветку БА;
+• открываем сундуки снаряжения ворона и экипируем его;
+• собираем ресурсы.
+
+[A56868][b]НЕ ДЕЛАЕМ:[/b][-]
+• не используем ускорения, кроме исследовательских;
+• не заходим в таверну;
+• не улучшаем уровень, звёзды и навыки героев;
+• не кормим ворона.`
+  },
+  thursday: {
+    day:"Четверг",
+    text:`[76568F][b]ДУЭЛЬ АЛЬЯНСОВ — ЧЕТВЕРГ[/b][-]
+[526F91]Время сервера: UTC−2[-]
+
+[526F91][b]00:00–04:00[/b][-]
+• улучшаем технологии.
+
+[526F91][b]04:00–08:00[/b][-]
+• тратим энергию; кормление ворона пропускаем.
+
+[526F91][b]08:00–12:00[/b][-]
+• противоядие, таверна, фрагменты героев и навыки героев. Тратим всё!
+
+[526F91][b]12:00–16:00[/b][-]
+• строительство и ускорения стройки. Распаковываем в пятницу.
+
+[526F91][b]16:00–20:00[/b][-]
+• обучаем войска.
+[56816D]Очки БА: обучение войск и соответствующие ускорения.[-]
+
+[AD8050][b]ДОПОЛНИТЕЛЬНО:[/b][-]
+• используем фрагменты героев и улучшаем навыки;
+• приоритет — основной отряд;
+• собираем ресурсы.
+
+[A56868][b]НЕ ДЕЛАЕМ:[/b][-]
+• не используем ускорения;
+• не нанимаем выживших;
+• не открываем сундуки снаряжения ворона;
+• не кормим ворона.
+
+[76568F][b]ПОДГОТОВКА К ПЯТНИЦЕ:[/b][-]
+Выполняем задания Соколиной башни, награды не забираем. На ночь ставим длительное строительство и мощное исследование для распаковки в пятницу.`
+  },
+  friday: {
+    day:"Пятница",
+    text:`[76568F][b]ДУЭЛЬ АЛЬЯНСОВ — ПЯТНИЦА[/b][-]
+[526F91]Время сервера: UTC−2[-]
+
+[526F91][b]00:00–04:00[/b][-]
+• тратим энергию; ворона пропускаем.
+
+[526F91][b]04:00–08:00[/b][-]
+• противоядие и таверна — лучше пропустить.
+
+[526F91][b]08:00–12:00[/b][-]
+• строительство и ускорения стройки.
+[56816D]Очки БА/БНВ: строительство и строительные ускорения.[-]
+
+[526F91][b]12:00–16:00[/b][-]
+• обучаем войска и используем ускорения обучения.
+[56816D]Очки БА и БНВ: обучение войск и ускорения обучения.[-]
+
+[526F91][b]16:00–20:00[/b][-]
+• исследования и ускорения исследований.
+[56816D]Очки БА: исследования и исследовательские ускорения.[-]
+
+[AD8050][b]ДОПОЛНИТЕЛЬНО:[/b][-]
+• выполняем задания Соколиной башни;
+• улучшаем технологии;
+• строим и обучаем войска;
+• собираем ресурсы.
+
+[A56868][b]ВАЖНО:[/b][-]
+• не нанимаем и не улучшаем героев;
+• не заходим в таверну;
+• не кормим и не улучшаем ворона.
+
+[76568F][b]СОВЕТ:[/b][-]
+Если очков достаточно, строительные ускорения сохраняем до вторника, исследовательские — до среды.`
+  },
+  saturday: {
+    day:"Суббота",
+    text:`[76568F][b]ДУЭЛЬ АЛЬЯНСОВ — СУББОТА[/b][-]
+[526F91]Время сервера: UTC−2[-]
+
+[AD8050]Если будете офлайн, поставьте щит. Следите за личными очками и очками альянса.[-]
+
+[526F91][b]00:00–04:00[/b][-]
+• ничего не делаем.
+
+[526F91][b]04:00–08:00[/b][-]
+• строительство и ускорения стройки. Не распаковываем до вторника.
+
+[526F91][b]08:00–12:00[/b][-]
+• обучаем войска и используем ускорения обучения.
+[56816D]Очки БА: обучение войск и ускорения обучения.[-]
+
+[526F91][b]12:00–16:00[/b][-]
+• исследования и ускорения исследований.
+[56816D]Очки БА: исследования и исследовательские ускорения.[-]
+
+[526F91][b]16:00–20:00[/b][-]
+• тратим энергию.
+
+[AD8050][b]ДОПОЛНИТЕЛЬНО:[/b][-]
+• отправляем UR караван;
+• проводим UR секретную операцию.
+
+[A56868][b]ВАЖНО:[/b][-]
+• не нанимаем и не улучшаем героев;
+• не заходим в таверну;
+• не кормим и не улучшаем ворона;
+• не открываем сундуки ворона.`
+  },
+  sunday: {
+    day:"Воскресенье",
+    text:`[76568F][b]ДУЭЛЬ АЛЬЯНСОВ — ВОСКРЕСЕНЬЕ[/b][-]
+[526F91]Время сервера: UTC−2[-]
+
+[526F91][b]В ТЕЧЕНИЕ ДНЯ[/b][-]
+• выполняем задания Соколиной башни, награды не забираем;
+• подготавливаем здания до состояния молоточков, не распаковываем;
+• постоянно собираем ресурсы и проверяем войска при каждом входе в игру.
+
+[A56868][b]СЕГОДНЯ НЕ ДЕЛАЕМ:[/b][-]
+• не используем ускорения;
+• не заходим в таверну;
+• не повышаем уровень героев;
+• не улучшаем звёзды и навыки героев;
+• не кормим ворона;
+• не открываем сундуки ворона.
+
+[76568F][b]ПОДГОТОВКА К НОВОЙ НЕДЕЛЕ:[/b][-]
+Спокойно готовимся к новой неделе и копим ресурсы. В понедельник стартует новая Битва SvS — встречаем её во всеоружии!`
+  }
+};
+
+const input=document.getElementById('inputArea');
+const preview=document.getElementById('previewArea');
+let activeKey=null, posterUrl=null;
+
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* Преобразуем только поддерживаемые игровые BB-коды.
+   Обычный текст экранируется до преобразования — HTML из текста не исполнится. */
+function renderBB(raw){
+  let out='', i=0;
+  const stack=[];
+  while(i<raw.length){
+    const rest=raw.slice(i);
+    let m;
+    if((m=rest.match(/^\[([0-9A-Fa-f]{6})\]/))){
+      out+='<span style="color:#'+m[1]+'">'; stack.push('color'); i+=m[0].length; continue;
+    }
+    if(rest.startsWith('[-]')){
+      if(stack.length){out+='</span>';stack.pop();} else out+='[-]';
+      i+=3; continue;
+    }
+    const tags=[['[b]','<b>','b'],['[/b]','</b>','/b'],['[i]','<i>','i'],['[/i]','</i>','/i'],['[u]','<u>','u'],['[/u]','</u>','/u']];
+    let matched=false;
+    for(const [tag,html] of tags){
+      if(rest.toLowerCase().startsWith(tag)){
+        out+=html;i+=tag.length;matched=true;break;
+      }
+    }
+    if(matched)continue;
+    if(raw[i]==='\n'){out+='<br>';i++;continue;}
+    let next=i+1;
+    while(next<raw.length && raw[next]!=='[' && raw[next]!=='\n')next++;
+    out+=escapeHTML(raw.slice(i,next));i=next;
+  }
+  while(stack.length-- > 0)out+='</span>';
+  return out;
+}
+function updateEditor(){
+  const n=input.value.length, el=document.getElementById('charCount');
+  el.textContent=n+' / 1000';el.classList.toggle('over',n>1000);
+  preview.innerHTML=input.value?renderBB(input.value):'<span class="empty">Здесь появится уведомление.</span>';
+}
+function insertWrap(open,close){
+  const a=input.selectionStart,b=input.selectionEnd,v=input.value;
+  const selected=v.slice(a,b);
+  input.setRangeText(open+selected+close,a,b,'select');
+  input.focus();
+  input.setSelectionRange(a+open.length,a+open.length+selected.length);
+  updateEditor();
+}
+document.querySelectorAll('[data-wrap]').forEach(btn=>btn.addEventListener('click',()=>insertWrap(btn.dataset.wrap,btn.dataset.close)));
+document.querySelectorAll('[data-color]').forEach(btn=>btn.addEventListener('click',()=>insertWrap('['+btn.dataset.color+']','[-]')));
+input.addEventListener('input',updateEditor);
+document.getElementById('hideKeyboard').addEventListener('click',()=>input.blur());
+
+async function copyText(text,button){
+  try{
+    if(navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+    else{
+      const temp=document.createElement('textarea');temp.value=text;temp.style.position='fixed';temp.style.opacity='0';
+      document.body.appendChild(temp);temp.select();document.execCommand('copy');temp.remove();
+    }
+    const old=button.textContent;button.textContent='Скопировано';setTimeout(()=>button.textContent=old,1500);
+  }catch(e){alert('Не удалось скопировать. Выделите текст и скопируйте вручную.');}
+}
+document.getElementById('copyEditor').addEventListener('click',e=>copyText(input.value,e.currentTarget));
+
+const sections=['editor','preview','templates'];
+function switchTab(name){
+  input.blur();
+  sections.forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==name));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  if(name==='preview')updateEditor();
+  if(name==='templates')showHome();
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+
+function showHome(){
+  ['templateHome','duelDays','templateDetail'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('templateHome').classList.remove('hidden');
+}
+function showDays(){
+  ['templateHome','duelDays','templateDetail'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('duelDays').classList.remove('hidden');
+}
+document.getElementById('openDuel').addEventListener('click',showDays);
+document.getElementById('backHome').addEventListener('click',showHome);
+document.getElementById('backDays').addEventListener('click',()=>{document.getElementById('posterUpload').value='';showDays();});
+
+const grid=document.getElementById('daysGrid');
+const dayOrder=['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+const dayNames={monday:'Понедельник',tuesday:'Вторник',wednesday:'Среда',thursday:'Четверг',friday:'Пятница',saturday:'Суббота',sunday:'Воскресенье'};
+dayOrder.forEach(key=>{
+  const b=document.createElement('button');b.className='day'+(templates[key]?'':' unavailable');
+  b.innerHTML='<strong>'+dayNames[key]+'</strong><small>'+(templates[key]?'Шаблон готов':'Текст ещё не добавлен')+'</small>';
+  b.addEventListener('click',()=>templates[key]&&openTemplate(key));grid.appendChild(b);
+});
+function openTemplate(key){
+  activeKey=key;input.blur();
+  const t=templates[key];
+  document.getElementById('templateHome').classList.add('hidden');
+  document.getElementById('duelDays').classList.add('hidden');
+  document.getElementById('templateDetail').classList.remove('hidden');
+  document.getElementById('detailTitle').textContent='Дуэль альянсов — '+t.day;
+  document.getElementById('templatePreview').innerHTML=renderBB(t.text);
+  const count=t.text.length, countEl=document.getElementById('templateCount');
+  countEl.textContent=count+' / 1000 символов';
+  countEl.style.color=count>1000?'#ff8d8d':'#c4ccd4';
+  document.getElementById('posterUpload').value='';
+  if(posterUrl){URL.revokeObjectURL(posterUrl);posterUrl=null;}
+  document.getElementById('poster').innerHTML='<div class="poster-placeholder"><strong>DARK | IMPERIUM</strong><small>ДУЭЛЬ АЛЬЯНСОВ<br>'+t.day.toUpperCase()+'<br>ВРЕМЯ СЕРВЕРА UTC−2</small></div>';
+}
+document.getElementById('posterUpload').addEventListener('change',e=>{
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  if(posterUrl)URL.revokeObjectURL(posterUrl);
+  posterUrl=URL.createObjectURL(file);
+  const img=document.createElement('img');img.src=posterUrl;img.alt='Постер '+(templates[activeKey]?.day||'');
+  document.getElementById('poster').replaceChildren(img);
+});
+document.getElementById('copyTemplate').addEventListener('click',e=>{if(activeKey)copyText(templates[activeKey].text,e.currentTarget);});
+document.getElementById('useTemplate').addEventListener('click',()=>{
+  if(!activeKey)return;
+  const t=templates[activeKey].text;
+  if(t.length>1000){alert('Шаблон превышает лимит 1000 символов.');return;}
+  input.value=t;updateEditor();switchTab('editor');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+updateEditor();
+</script>
+</body>
+</html>
